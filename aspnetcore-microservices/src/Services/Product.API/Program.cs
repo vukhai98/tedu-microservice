@@ -1,42 +1,38 @@
 using Common.Logging;
+using Product.API.Extensions;
+using Product.API.Persistence;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseSerilog(Serilogger.Configure);
 
 Log.Information(messageTemplate: "Start Product API up");
 
 try
 {
-    // Add services to the container.
-
-    builder.Services.AddControllers();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
-
+    builder.Host.UseSerilog(Serilogger.Configure);
+    builder.Host.AddAppConfigurations();
+    builder.Services.AddInfrastructure(builder.Configuration);
     var app = builder.Build();
+    app.UseInferastructure();
 
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
+    // auto migration when run project
+    app.MigrateDatabase<ProductContext>((context, _) =>
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+        ProductContextSeed.SeedProductAsync(context, Log.Logger).Wait();
+    }).Run();
 
-    app.UseHttpsRedirection();
-
-    app.UseAuthorization();
-
-    app.MapControllers();
-
-    app.Run();
 }
-catch(Exception ex)
+catch (Exception ex)
 {
-    Log.Fatal(ex, messageTemplate: "Unhanled exception");
+    string type = ex.GetType().Name;
+    if (type.Equals("StopTheHostException", StringComparison.Ordinal))
+    {
+        throw;
+    }
+    Log.Fatal(ex, messageTemplate: $"Unhanled exception: {ex.Message}");
 }
-finally {
+finally
+{
     Log.Information(messageTemplate: "Shut down Product API complete");
     Log.CloseAndFlush();
 }
