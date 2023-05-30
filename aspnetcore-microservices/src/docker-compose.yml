@@ -11,13 +11,30 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3309:3306"
+  
+   #api section
+  product.api:
+    image: ${DOCKER_REGISTRY-}product-api:${PLATFORM:-linux}-${TAG:-latest}
+    container_name: product.api
+    build:
+      context: .
+      dockerfile: Services/Product.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:DefaultConnectionString=Server=productdb;Port=3309;Database=ProductDB;Uid=root;Pwd=Abc@123"
+    depends_on: 
+      - productdb
+    ports:
+      - "6002:80"
+    restart: always
 
 networks:
   default:
     name: tedu_microservices
     driver: bridge
 
-    #volumes section
+#volumes section
 volumes:
   mysql_data:
     name: mysql_data

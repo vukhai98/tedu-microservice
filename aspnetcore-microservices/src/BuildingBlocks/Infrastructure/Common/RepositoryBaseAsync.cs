@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Common
 {
-    public class RepositoryBaseAsync<T, K, TContext> : IRepositoryQueryBaseAsync<T, K, TContext> where T : EntityBase<K> where TContext : DbContext
+    public class RepositoryBaseAsync<T, K, TContext> : IRepositoryBaseAsync<T, K, TContext> where T : EntityBase<K> where TContext : DbContext
     {
         private readonly TContext _dbContext;
         private readonly IUnitOfWork<TContext> _unitOfWork;
