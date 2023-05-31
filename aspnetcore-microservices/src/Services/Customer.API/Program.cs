@@ -1,4 +1,7 @@
 using Common.Logging;
+using Customer.API.Extensions;
+using Customer.API.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,27 +11,15 @@ Log.Information(messageTemplate: "Start Customer API up");
 
 try
 {
-    // Add services to the container.
+    builder.Host.UseSerilog(Serilogger.Configure);
+    builder.Host.AddAppConfigurations();
+    builder.Services.AddInfrastructure(builder.Configuration);
 
-    builder.Services.AddControllers();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddDbContext<CustomerContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
     var app = builder.Build();
-
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-
-    app.UseHttpsRedirection();
-
-    app.UseAuthorization();
-
-    app.MapControllers();
+    app.UseInferastructure();
 
     app.Run();
 }
