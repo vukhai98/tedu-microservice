@@ -10,11 +10,6 @@ namespace Customer.API.Services
         {
             _customerRepository = customerRepository;
         }    
-        public async Task<IResult> GetAlls() 
-        {
-            var result =  _customerRepository.FindAll();
-            return Results.Ok(result);
-        }
 
         public async Task<IResult> GetUserByName(string userName)
         {

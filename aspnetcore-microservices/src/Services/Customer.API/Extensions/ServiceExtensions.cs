@@ -5,6 +5,8 @@ using Customer.API.Persistence;
 using System.Configuration;
 using Customer.API;
 using Microsoft.AspNetCore.Builder;
+using Customer.API.Services.Interfaces;
+using Customer.API.Services;
 
 namespace Customer.API.Extensions
 {
@@ -26,7 +28,8 @@ namespace Customer.API.Extensions
         private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             return services.AddScoped(typeof(IRepositoryBaseAsync<,,>), typeof(RepositoryBaseAsync<,,>))
-                           .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+                           .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
+                           .AddScoped(typeof(ICustomerService), typeof(CustomerService));
         }
     }
 }

@@ -16,10 +16,5 @@ namespace Customer.API.Repositories
         {
             return await FindByCondition(x => x.UserName.Equals(userName)).SingleOrDefaultAsync();
         }
-
-        public async Task<IEnumerable<Entities.Customer>> GetCustomers()
-        {
-            return await FindAll().ToListAsync();
-        }
     }
 }

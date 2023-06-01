@@ -3,6 +3,5 @@
     public interface ICustomerService 
     {
         Task<IResult> GetUserByName(string userName);
-        Task<IResult> GetAlls();
     }
 }

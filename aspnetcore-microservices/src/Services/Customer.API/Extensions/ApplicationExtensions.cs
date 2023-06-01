@@ -7,7 +7,6 @@ namespace Customer.API.Extensions
         public static void UseInferastructure(this IApplicationBuilder app)
         {
             app.UseSwagger();
-            app.UseSwagger();
 
             app.UseRouting();
             //app.UseHttpsRedirection(); // for production only
