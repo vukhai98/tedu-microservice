@@ -1,5 +1,4 @@
 ﻿using Contracts.Common.Interfaces;
-using Customer.API.Persistence;
 using Customer.API.Repositories.Interfaces;
 using Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +13,9 @@ namespace Customer.API.Repositories
 
         public async Task<Entities.Customer> GetCustomerByUserName(string userName)
         {
-            return await FindByCondition(x => x.UserName.Equals(userName)).SingleOrDefaultAsync();
-        }
+            var customer = await FindByCondition(x => x.UserName.Equals(userName)).SingleOrDefaultAsync();
 
-        public async Task<IEnumerable<Entities.Customer>> GetCustomers()
-        {
-            return await FindAll().ToListAsync();
+            return customer != null ? customer : null;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Contracts.Domains;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Customer.API.Entities
 {
@@ -12,7 +13,7 @@ namespace Customer.API.Entities
         [Column(TypeName = "varchar(100)")]
         public string FirstName { get; set; }
         [Required]
-        [Column(TypeName ="varchar(150)")]
+        [Column(TypeName = "varchar(150)")]
         public string LastName { get; set; }
         [Required]
         [EmailAddress]
