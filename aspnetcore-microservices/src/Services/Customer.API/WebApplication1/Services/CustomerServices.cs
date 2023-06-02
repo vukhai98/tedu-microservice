@@ -3,19 +3,18 @@ using Customer.API.Services.Interfaces;
 
 namespace Customer.API.Services
 {
-    public class CustomerService : ICustomerService
+    public class CustomerServices : ICustomerServices
     {
         private readonly ICustomerRepository _customerRepository;
-        public CustomerService(ICustomerRepository customerRepository) 
+        public CustomerServices(ICustomerRepository customerRepository)
         {
             _customerRepository = customerRepository;
-        }    
-
-        public async Task<IResult> GetUserByName(string userName)
+        }
+        public async Task<IResult> GetCustomerByUserName(string userName)
         {
             var result = await _customerRepository.GetCustomerByUserName(userName);
 
-            return Results.Ok(result);
+            return result != null ? Results.Ok(result) : Results.NotFound();
         }
     }
 }

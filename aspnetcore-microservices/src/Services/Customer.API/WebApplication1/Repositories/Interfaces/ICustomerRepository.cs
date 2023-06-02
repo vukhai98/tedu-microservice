@@ -1,5 +1,5 @@
 ﻿using Contracts.Common.Interfaces;
-using Customer.API.Persistence;
+using Infrastructure.Common;
 
 namespace Customer.API.Repositories.Interfaces
 {

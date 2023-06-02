@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Customer.API.Migrations
 {
-    public partial class InitDB : Migration
+    public partial class InitCustomerDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,18 +24,6 @@ namespace Customer.API.Migrations
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Customers_EmailAddress",
-                table: "Customers",
-                column: "EmailAddress",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Customers_UserName",
-                table: "Customers",
-                column: "UserName",
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
