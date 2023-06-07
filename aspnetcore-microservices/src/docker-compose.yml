@@ -28,6 +28,22 @@ services:
     ports:
       - "6002:80"
     restart: always
+  #api section
+  customer.api:
+    image: ${DOCKER_REGISTRY-}customer-api:${PLATFORM:-linux}-${TAG:-latest}
+    container_name: customer.api
+    build:
+      context: .
+      dockerfile: Services/Customer.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:DefaultConnectionString=Server=host.docker.internal;Port=5433;Database=CustomerDB;User Id=admin;Password=admin1234;"
+    depends_on: 
+      - customerdb
+    ports:
+      - "6003:80"
+    restart: always
 
   #portainer
   portainer:

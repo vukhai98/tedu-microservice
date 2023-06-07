@@ -95,7 +95,7 @@ namespace Infrastructure.Common
 
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
         {
-            return !trackChanges ? _dbContext.Set<T>().Where(expression).AsNoTracking() : _dbContext.Set<T>().Where(expression);
+            return  _dbContext.Set<T>().Where(expression).AsNoTracking();
         }
 
         public async Task<T?> GetByIdAsync(K id)

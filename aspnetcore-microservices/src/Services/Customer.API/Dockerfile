@@ -1,0 +1,27 @@
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 As base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build 
+WORKDIR /src
+
+COPY ["Services/Customer.API/Customer.API.csproj","Services/Customer.API/"] 
+COPY ["BuildingBlocks/Common.Logging/Common.Logging.csproj","BuildingBlocks/Common.Logging/"] 
+COPY ["BuildingBlocks/Contracts/Contracts.csproj","BuildingBlocks/Contracts/"] 
+COPY ["BuildingBlocks/Infrastructure/Infrastructure.csproj","BuildingBlocks/Infrastructure/"] 
+COPY ["Services/Shared/Shared.csproj","BuildingBlocks/Shared/"] 
+
+RUN  dotnet restore "Services/Customer.API/Customer.API.csproj"
+
+COPY . .
+WORKDIR  "/src/Services/Customer.API"
+RUN  dotnet build "Customer.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN  dotnet publish "Customer.API.csproj" -c Release -o /app/publish
+
+FROM base as Final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+ENTRYPOINT [ "dotnet","Customer.API.dll"]
