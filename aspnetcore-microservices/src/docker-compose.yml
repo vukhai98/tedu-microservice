@@ -56,6 +56,14 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+    
+  #basketdb: redis
+  basketdb:
+    image: redis:alpine
+    container_name: basketdb
+    restart: always
+    ports:
+      - "6379:6379"
 
   #customerdb: postgres
   customerdb:
