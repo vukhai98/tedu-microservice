@@ -6,6 +6,6 @@ namespace Basket.API.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-       
-    }
+        
+    };
 }

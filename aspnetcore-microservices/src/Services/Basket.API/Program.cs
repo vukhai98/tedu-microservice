@@ -1,29 +1,26 @@
-using Basket.API.Extensions;
-using Common.Logging;
-using Product.API.Repositories.Interfaces;
-using Product.API.Repositories;
-using Serilog;
-using Basket.API.Repositories.Interfaces;
 using Basket.API.Repositories;
+using Basket.API.Repositories.Interfaces;
+using Common.Logging;
 using Contracts.Common.Interfaces;
 using Infrastructure.Common;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-    // Add services to the container.
-    builder.Host.UseSerilog(Serilogger.Configure);
+// Add services to the container.
+builder.Host.UseSerilog(Serilogger.Configure);
 Log.Information(messageTemplate: "Start Basket API up");
 
 try
 {
+    builder.Services.AddScoped<ISerializeService, SerializeService>()
+                    .AddScoped<IBasketRepository, BasketRepository>();
 
-    builder.Host.AddAppConfigurations();
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = builder.Configuration.GetConnectionString("DefaultConnectionString");
+    });
 
-    //                .AddScoped<ISerializeService, SerializeService>();
-    
-    //builder.Services.AddStackExchangeRedisCache(options =>
-    //{
-    //    options.Configuration = builder.Configuration.GetConnectionString("DefaultConnectionString");
-    //});
+    // Add services to the container.
 
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
