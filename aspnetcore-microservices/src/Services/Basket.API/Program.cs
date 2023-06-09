@@ -6,6 +6,7 @@ using Infrastructure.Common;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
 builder.Host.UseSerilog(Serilogger.Configure);
 Log.Information(messageTemplate: "Start Basket API up");
@@ -15,10 +16,7 @@ try
     builder.Services.AddScoped<ISerializeService, SerializeService>()
                     .AddScoped<IBasketRepository, BasketRepository>();
 
-    builder.Services.AddStackExchangeRedisCache(options =>
-    {
-        options.Configuration = builder.Configuration.GetConnectionString("DefaultConnectionString");
-    });
+    builder.Services.AddStackExchangeRedisCache(options => { options.Configuration = configuration["RedisCacheUrl"]; });
 
     // Add services to the container.
 
