@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+ # Order DB :
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: orderdb
+    environment:
+      SA_PASSWORD: "Abc@1234"
+      ACCEPT_EULA: "Y"
+    restart: always
+    volumes:
+      - sqlserver_data:/var/lib/sqlserver/data
+    ports:
+      - "1435:1433"
+
   productdb:
     image: mysql:latest
     container_name: productdb
@@ -114,6 +127,8 @@ networks:
 
 #volumes section
 volumes:
+  sqlserver_data:
+    name: sqlserver_data
   mysql_data:
     name: mysql_data
   portainer_data:
