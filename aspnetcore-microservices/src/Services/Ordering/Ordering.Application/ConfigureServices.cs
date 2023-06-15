@@ -14,14 +14,16 @@ namespace Ordering.Application
 {
     public static class ConfigureServices
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services) =>
-            services.AddAutoMapper(Assembly.GetExecutingAssembly())
-                    .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
-                    .AddMediatR(Assembly.GetExecutingAssembly())
-                    .AddTransient(typeof(IPipelineBehavior<,>),typeof(UnhandledExceptionBehaviour<,>))
-                    .AddTransient(typeof(IPipelineBehavior<,>),typeof(PerformanceBehaviour<,>))
-                    .AddTransient(typeof(IPipelineBehavior<,>),typeof(ValidationBehavour<,>))
-                    //.AddScoped(IOrderRepository, OrderRepository)
-                    ;
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        {
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavour<,>));
+            return services;
+        }
     }
 }
