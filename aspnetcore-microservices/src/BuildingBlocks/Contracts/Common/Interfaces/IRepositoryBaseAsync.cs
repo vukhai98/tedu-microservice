@@ -14,7 +14,7 @@ namespace Contracts.Common.Interfaces
     {
       
     }
-    public interface IRepositoryBaseAsync<T, K, TContext> : IRepositoryQueryBase<T, K>
+    public interface IRepositoryBaseAsync<T, K, TContext> : IRepositoryBaseAsync<T, K>
                      where T : EntityBase<K> where TContext : DbContext
     {
         

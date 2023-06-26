@@ -1,6 +1,9 @@
 ﻿using Contracts.Common.Interfaces;
+using Contracts.Services;
 using FluentValidation;
 using Infrastructure.Common;
+using Infrastructure.Services;
+using MailKit.Net.Smtp;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +33,7 @@ namespace Ordering.Infrastructure
 
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+            services.AddScoped(typeof(ISmtpEmailService), typeof(SMTPEmailServices));
 
             return services;
         }
