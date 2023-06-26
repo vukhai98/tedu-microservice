@@ -1,6 +1,7 @@
 using Common.Logging;
 using FluentValidation;
 using MediatR;
+using Ordering.API.Extensions;
 using Ordering.Application;
 using Ordering.Application.Common.Behaviours;
 using Ordering.Infrastructure;
@@ -15,8 +16,11 @@ builder.Host.UseSerilog(Serilogger.Configure);
 Log.Information(messageTemplate: "Start Ordering API up");
 try
 {
-    builder.Services.AddApplicationServices();
+
     // Add services to the container.
+    builder.Host.AddAppConfigurations();
+    builder.Services.AddConfigurationSettings(builder.Configuration);
+    builder.Services.AddApplicationServices();
     builder.Services.AddInfrastructureServices(builder.Configuration);
  
     builder.Services.AddControllers();
