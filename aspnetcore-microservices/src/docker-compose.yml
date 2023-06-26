@@ -73,6 +73,22 @@ services:
     ports:
       - "6004:80"
     restart: always
+  #api section
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}ordering-api:${PLATFORM:-linux}-${TAG:-latest}
+    container_name: ordering.api
+    build:
+      context: .
+      dockerfile: Services/Ordering/Ordering.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings : DefaultConnectionString=Server=host.docker.internal,1435;Database=OrderDB;User Id=sa;Password=Abc@1234;MultipleActiveResultSets=true"
+    depends_on: 
+      - orderdb
+    ports:
+      - "6005:80"
+    restart: always
 
   #portainer
   portainer:
