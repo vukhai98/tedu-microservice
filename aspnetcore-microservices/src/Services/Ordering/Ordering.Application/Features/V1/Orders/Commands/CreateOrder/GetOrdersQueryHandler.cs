@@ -30,6 +30,7 @@ namespace Ordering.Application.Features.V1.Orders.Queries.GetOrders
         {
             try
             {
+                //var result = await _orderRepository.CreateAsync(command.Mapping);
                 return new ApiResult<long>(false, 0);
             }
             catch (Exception ex)
