@@ -1,3 +1,5 @@
+using Basket.API.AutoMapper;
+using Basket.API.Extensions;
 using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
 using Common.Logging;
@@ -13,12 +15,25 @@ Log.Information(messageTemplate: "Start Basket API up");
 
 try
 {
-    builder.Services.AddScoped<ISerializeService, SerializeService>()
-                    .AddScoped<IBasketRepository, BasketRepository>();
+    // Register DI for services 
+    builder.Services.ConfigureServices();
 
-    builder.Services.AddStackExchangeRedisCache(options => { options.Configuration = configuration["RedisCacheUrl"]; });
+    builder.Services.AddConfigurationSettings(builder.Configuration);
 
-    // Add services to the container.
+    // Register Redis 
+    builder.Services.ConfigureRedis(builder.Configuration);
+
+    // Register AutoMapper
+    builder.Services.AddAutoMapper(x => x.AddProfile(new MappingProfile()));
+
+
+    // router url is lowercase
+    builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
+    // Configure MassTransit
+    builder.Services.ConfigueMassTransit();
+
+
 
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
