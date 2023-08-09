@@ -31,10 +31,6 @@ namespace Ordering.Infrastructure
 
             });
 
-            services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
-            services.AddScoped(typeof(ISmtpEmailService), typeof(SMTPEmailServices));
-
             return services;
         }
     }

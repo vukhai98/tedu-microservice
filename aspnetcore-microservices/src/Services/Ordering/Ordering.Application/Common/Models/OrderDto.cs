@@ -9,10 +9,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Ordering.Application.Features.V1.Orders.Commands.Update;
 
 namespace Ordering.Application.Common.Models
 {
-    public class OrderDto :IMapFrom<Order>
+    public class OrderDto : IMapFrom<Order>
     {
         public long Id { get; set; }
         public string UserName { get; set; }
@@ -30,5 +32,6 @@ namespace Ordering.Application.Common.Models
         public string InvoiceAddress { get; set; }
 
         public string Status { get; set; }
+
     }
 }

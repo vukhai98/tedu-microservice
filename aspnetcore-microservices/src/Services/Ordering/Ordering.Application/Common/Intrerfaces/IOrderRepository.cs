@@ -11,5 +11,9 @@ namespace Ordering.Application.Common.Intrerfaces
     public interface IOrderRepository : IRepositoryBaseAsync<Order, long>
     {
         Task<IEnumerable<Order>> GetOrderByUserName(string userName);
+
+        Task<Order> UpdateOrderAsync(Order order);
+
+        Task<Order> CreateOrderAsync(Order order);
     }
 }
