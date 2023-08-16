@@ -13,6 +13,8 @@ COPY ["Services/Shared/Shared.csproj","BuildingBlocks/Shared/"]
 COPY ["Services/Ordering/Ordering.Application/Ordering.Application.csproj","Services/Ordering/Ordering.Application/"] 
 COPY ["Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj","Services/Ordering/Ordering.Infrastructure/"] 
 COPY ["Services/Ordering/Ordering.Domain/Ordering.Domain.csproj","Services/Ordering/Ordering.Domain/"] 
+COPY ["BuildingBlocks/EventBus/EventBus.Messages/EventBus.Messages/EventBus.Messages.csproj","BuildingBlocks/EventBus/EventBus.Messages/EventBus.Messages/"] 
+
 
 RUN  dotnet restore "Services/Ordering/Ordering.API/Ordering.API.csproj"
 

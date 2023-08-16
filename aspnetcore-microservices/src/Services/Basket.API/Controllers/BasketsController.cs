@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Repositories.Interfaces;
+using EventBus.Messages.IntegrationEvents.Events;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -64,7 +65,7 @@ namespace Basket.API.Controllers
                 return NotFound();
 
             // publish checkout event to Eventbus Message
-            var eventMessage = _mapper.Map<BasketCheckout>(basketCheckout);
+            var eventMessage = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
             eventMessage.TotalPrice = basket.TotalPrice;
 
              _publishEndpoint.Publish(eventMessage);

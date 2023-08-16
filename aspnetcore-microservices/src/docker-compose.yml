@@ -68,6 +68,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - "RedisCacheUrl=host.docker.internal:6379"
+      - "EventBusSettings : HostAddress=amqp://guest:guest@host.docker.internal:5672"
     depends_on: 
       - customerdb
     ports:
@@ -84,6 +85,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - "ConnectionStrings : DefaultConnectionString=Server=host.docker.internal,1435;Database=OrderDB;User Id=sa;Password=Abc@1234;MultipleActiveResultSets=true"
+      - "EventBusSettings : HostAddress=amqp://guest:guest@host.docker.internal:5672"
     depends_on: 
       - orderdb
     ports:
