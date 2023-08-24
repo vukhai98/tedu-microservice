@@ -33,16 +33,19 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Create
 
                 var orderEntity = _mapper.Map<Order>(command);
 
-                var addedOrder = await _orderRepository.CreateOrderAsync(orderEntity);
+                 _orderRepository.CreateAsync(orderEntity);
+
+                // Trigger event create entity order
+                orderEntity.AddedOrder();
 
                 await _orderRepository.SaveChangesAsync();
 
-                _logger.LogInformation($"Order {addedOrder.Id} is successfully created.");
+                _logger.LogInformation($"Order {orderEntity.Id} is successfully created.");
 
                 // send mail for user 
-                SendMailAsync(addedOrder, cancellationToken);
+                //SendMailAsync(addedOrder, cancellationToken);
 
-                return new ApiSuccessedResult<long>(addedOrder.Id);
+                return new ApiSuccessedResult<long>(orderEntity.Id);
             }
             catch (Exception ex)
             {

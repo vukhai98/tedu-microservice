@@ -1,4 +1,6 @@
 ## Command Migration:
-add-Migration Initdataproject -p Portal.Infrastructure -StartupProject Portal.API -OutputDir Persistence/Migrationsad
+add-Migration UpdateOrderTable -p Ordering.Infrastructure -StartupProject Ordering.API -OutputDir Persistence/Migrations
 
-update-database -StartupProject Portal.API
+update-database -StartupProject Ordering.API
+
+EntityFrameworkCore\Add-Migration UpdateOrderTable -p Ordering.Infrastructure -StartupProject Ordering.API -OutputDir Persistence/Migrations
