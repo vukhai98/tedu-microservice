@@ -41,7 +41,7 @@ namespace Ordering.Infrastructure.Persistence
         private void SetBaseEventsBeforeSavesChanges()
         {
             // Lay cac entity co event 
-            var domainEntities = ChangeTracker.Entries<IEventEntity>()
+            var domainEntities = base.ChangeTracker.Entries<IEventEntity>()
                                               .Select(e => e.Entity)
                                               .Where(x => x.DomainEvents().Any())
                                               .ToList();

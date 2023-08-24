@@ -41,8 +41,8 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Delete
                 if (orderOld == null)
                     throw new NotFoundException(nameof(Order), command.Id);
 
-                await _orderRepository.DeleteAsync(orderOld);
-
+                 _orderRepository.Delete(orderOld);
+                orderOld.DeletedOrder();
                 await _orderRepository.SaveChangesAsync();
 
                 _logger.LogInformation($"Order {orderOld.Id} is successfully deleted.");
