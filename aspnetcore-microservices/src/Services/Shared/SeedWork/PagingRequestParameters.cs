@@ -10,9 +10,9 @@ namespace Shared.SeedWork
     {
         private const int maxPageSize = 100;
 
-        private int _pageSize = 10;
+        public int _pageSize = 10;
 
-        private int _pageNumber = 1;
+        public int _pageNumber = 1;
 
         private int PageNumber
         {
