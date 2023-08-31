@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +27,19 @@ namespace Shared.SeedWork
             };
 
             AddRange(items);
+        }
+
+        public static async Task<PageList<T>> ToPagedList(IMongoCollection<T> source, FilterDefinition<T> filter, int pageNumber, int pageSize)
+        {
+            var count = await source.Find(filter).CountDocumentsAsync();
+
+            var items = await source.Find(filter)
+                                    .Skip((pageNumber-1)*pageSize)
+                                    .Limit(pageSize)
+                                    .ToListAsync();
+
+            return new PageList<T>(items, count, pageNumber, pageSize); 
+
         }
     }
 }
