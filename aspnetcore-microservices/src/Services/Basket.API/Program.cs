@@ -1,14 +1,39 @@
+using Basket.API.AutoMapper;
+using Basket.API.Extensions;
+using Basket.API.Repositories;
+using Basket.API.Repositories.Interfaces;
 using Common.Logging;
+using Contracts.Common.Interfaces;
+using Infrastructure.Common;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+ConfigurationManager configuration = builder.Configuration;
+// Add services to the container.
 builder.Host.UseSerilog(Serilogger.Configure);
-
 Log.Information(messageTemplate: "Start Basket API up");
 
 try
 {
-    // Add services to the container.
+    // Register DI for services 
+    builder.Services.ConfigureServices();
+
+    builder.Services.AddConfigurationSettings(builder.Configuration);
+
+    // Register Redis 
+    builder.Services.ConfigureRedis(builder.Configuration);
+
+    // Register AutoMapper
+    builder.Services.AddAutoMapper(x => x.AddProfile(new MappingProfile()));
+
+
+    // router url is lowercase
+    builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
+    // Configure MassTransit
+    builder.Services.ConfigueMassTransit();
+
+
 
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

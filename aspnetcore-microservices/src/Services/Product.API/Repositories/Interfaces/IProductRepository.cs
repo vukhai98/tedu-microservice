@@ -1,10 +1,11 @@
 ﻿using Contracts.Common.Interfaces;
+using Infrastructure.Common;
 using Product.API.Entities;
 using Product.API.Persistence;
 
 namespace Product.API.Repositories.Interfaces
 {
-    public interface IProductRepository : IRepositoryQueryBaseAsync<CatalogProduct, long, ProductContext>
+    public interface IProductRepository : IRepositoryBaseAsync<CatalogProduct, long, ProductContext>
     {
         Task<IEnumerable<CatalogProduct>> GetProducts();
 

@@ -1,0 +1,25 @@
+﻿_id: Primary key in a Document(1 document is row in table), is added automatically.
+Collection: A gruop of documents = A table in RDBMS. No fixed cloumns/data type.
+Cursor: A pointer to the result set of a query.
+Database: A container for Collections. A Mongo server can store multiple Databases
+Document: A record in a Collection,consit of field name and values => A JSON object
+Field: A key/name - Value pair in a Docment. A document might have ) or (n) field
+Json: JavaScript Object Notation.
+Index: A special storage data structure. It helps index fields, ordering values of the fields.
+
+Command in MongoDB
+
+- Creating a database: use {databaseName}
+- Create table: db.{collectionName}.insertOne({name:"abc",age:10})
+- Drop table: db.{collectionName}.Drop()
+- Insert: db.{collectionName}.insertOne({...})
+- Select:
+	- db.{collectionName}.Find()
+	- db.{collectionName}.Find({name:"abc"})
+	- db.{collectionName}.Find({name:"abc", age: 40})
+	- db.{collectionName}.Find({name: /bc/})||.find({name:{$regex:/bc/}})
+- Update: db.{collectionName}.update({userId:1},{$set:{name:"def"}})
+- Delete: db.{collectionName}.remove{userId:1}
+- Sort: db.{collectionName}.Find().Sort({name:-1}).forEach(printJson)
+- Limit: db.{collectionName}.Find().limit(2).forEach(printJson)
+- Count: db.{collectionName}.count()

@@ -51,6 +51,12 @@ namespace Product.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
         {
+            
+            var productOdl = await _repository.GetProductByNo(productDto.No);
+
+            if (productOdl != null) 
+                return BadRequest($"Product No {productOdl.No} not exist !");
+
             var product = _mapper.Map<CatalogProduct>(productDto);
             await _repository.CreateProduct(product);
             await _repository.SaveChangesAsync();
@@ -69,6 +75,21 @@ namespace Product.API.Controllers
             var updateProduct = _mapper.Map(productDto, product);
 
             await _repository.UpdateProduct(updateProduct);
+            await _repository.SaveChangesAsync();
+
+            var result = _mapper.Map<ProductDto>(product);
+            return Ok(result);
+        }
+        [HttpPut("/{id}")]
+        public async Task<IActionResult> UpdateProduct([FromQuery]long id)
+        {
+            var product = await _repository.GetProduct(id);
+
+            if (product == null)
+                return NotFound();
+
+            await _repository.DeleteAsync(product);
+
             await _repository.SaveChangesAsync();
 
             var result = _mapper.Map<ProductDto>(product);

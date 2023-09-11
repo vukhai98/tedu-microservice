@@ -12,6 +12,15 @@ namespace Contracts.Common.Interfaces
 {
     public interface IRepositoryQueryBase<T, K, TContex> where T : EntityBase<K> where TContex : DbContext
     {
+      
+    }
+    public interface IRepositoryBaseAsync<T, K, TContext> : IRepositoryBaseAsync<T, K>
+                     where T : EntityBase<K> where TContext : DbContext
+    {
+        
+    }
+    public interface IRepositoryQueryBase<T, K> where T : EntityBase<K> 
+    {
         IQueryable<T> FindAll(bool trackChanges = false);
 
         IQueryable<T> FindAll(bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties);
@@ -25,19 +34,25 @@ namespace Contracts.Common.Interfaces
         Task<T?> GetByIdAsync(K id, params Expression<Func<T, object>>[] includeProperties);
 
     }
-    public interface IRepositoryQueryBaseAsync<T, K, TContext> : IRepositoryQueryBase<T, K, TContext>
-                     where T : EntityBase<K> where TContext : DbContext
-    {
+    public interface IRepositoryBaseAsync<T, K> : IRepositoryQueryBase<T, K> where T : EntityBase<K> 
+    { 
+
+        void Create(T entity);
         Task<K> CreateAsync(T entity);
 
+        IList<K> CreateList(IEnumerable<T> entities);
         Task<IList<K>> CreateListAsync(IEnumerable<T> entities);
 
+        void Update(T entity);
         Task UpdateAsync(T entity);
 
+        void UpdateList(IEnumerable<T> entities);
         Task UpdateListAsync(IEnumerable<T> entities);
 
+        void Delete(T entity);
         Task DeleteAsync(T entity);
 
+        void DeleteList(IEnumerable<T> entities);
         Task DeleteListAsync(IEnumerable<T> entities);
 
         Task<int> SaveChangesAsync();

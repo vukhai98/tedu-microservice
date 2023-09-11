@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Common
 {
-    public class RepositoryBaseAsync<T, K, TContext> : IRepositoryQueryBaseAsync<T, K, TContext> where T : EntityBase<K> where TContext : DbContext
+    public class RepositoryBaseAsync<T, K, TContext> : IRepositoryBaseAsync<T, K, TContext> where T : EntityBase<K> where TContext : DbContext
     {
         private readonly TContext _dbContext;
         private readonly IUnitOfWork<TContext> _unitOfWork;
@@ -30,42 +30,45 @@ namespace Infrastructure.Common
         public async Task<K> CreateAsync(T entity)
         {
             await _dbContext.Set<T>().AddAsync(entity);
+            await SaveChangesAsync();
             return entity.Id;
         }
 
         public async Task<IList<K>> CreateListAsync(IEnumerable<T> entities)
         {
             await _dbContext.Set<T>().AddRangeAsync(entities);
+            await SaveChangesAsync();
             return entities.Select(x => x.Id).ToList();
         }
 
-        public  Task UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity)
         {
             if (_dbContext.Entry(entity).State == EntityState.Unchanged)
-                return  Task.CompletedTask;
-            var exits =  _dbContext.Set<T>().Find(entity.Id);
+                return;
+            var exits = _dbContext.Set<T>().Find(entity.Id);
             _dbContext.Entry(exits).CurrentValues.SetValues(entity);
 
-            return Task.CompletedTask;
+            await SaveChangesAsync();
         }
 
         public async Task UpdateListAsync(IEnumerable<T> entities)
         {
-             await _dbContext.Set<T>().AddRangeAsync(entities);
+            await _dbContext.Set<T>().AddRangeAsync(entities);
+            await SaveChangesAsync();
+
         }
 
-        public  Task DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity)
         {
 
             _dbContext.Set<T>().Remove(entity);
-            return Task.CompletedTask;
-            
+            await SaveChangesAsync();
         }
 
-        public Task DeleteListAsync(IEnumerable<T> entities)
+        public async Task DeleteListAsync(IEnumerable<T> entities)
         {
             _dbContext.Set<T>().RemoveRange(entities);
-            return Task.CompletedTask;
+            await SaveChangesAsync();
         }
 
         public async Task EndTrasactionAsync()
@@ -95,12 +98,12 @@ namespace Infrastructure.Common
 
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false)
         {
-            return !trackChanges ? _dbContext.Set<T>().Where(expression).AsNoTracking() : _dbContext.Set<T>().Where(expression);
+            return _dbContext.Set<T>().Where(expression).AsNoTracking();
         }
 
         public async Task<T?> GetByIdAsync(K id)
         {
-            return await FindByCondition(x=> x.Id.Equals(id)).FirstOrDefaultAsync();
+            return await FindByCondition(x => x.Id.Equals(id)).FirstOrDefaultAsync();
         }
 
         public async Task<T?> GetByIdAsync(K id, params Expression<Func<T, object>>[] includeProperties)
@@ -110,12 +113,47 @@ namespace Infrastructure.Common
 
         public async Task RollbackTrasactionAsync()
         {
-             await  _dbContext.Database.RollbackTransactionAsync();
+            await _dbContext.Database.RollbackTransactionAsync();
         }
 
         public Task<int> SaveChangesAsync()
         {
             return _unitOfWork.CommitAsync();
+        }
+
+        public void Create(T entity)
+        {
+            _dbContext.Set<T>().Add(entity);
+        }
+
+        public IList<K> CreateList(IEnumerable<T> entities)
+        {
+            _dbContext.Set<T>().AddRange(entities);
+            return entities.Select(x => x.Id).ToList();
+        }
+
+        public void Update(T entity)
+        {
+
+            if (_dbContext.Entry(entity).State == EntityState.Unchanged)
+                return;
+            var exits = _dbContext.Set<T>().Find(entity.Id);
+            _dbContext.Entry(exits).CurrentValues.SetValues(entity);
+        }
+
+        public async void UpdateList(IEnumerable<T> entities)
+        {
+            await _dbContext.Set<T>().AddRangeAsync(entities);
+        }
+
+        public void Delete(T entity)
+        {
+            _dbContext.Set<T>().Remove(entity);
+        }
+
+        public void DeleteList(IEnumerable<T> entities)
+        {
+            _dbContext.Set<T>().RemoveRange(entities);
         }
     }
 }

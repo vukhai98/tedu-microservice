@@ -11,7 +11,7 @@ namespace Product.API
         {
             CreateMap<CatalogProduct, ProductDto>();
             CreateMap<CreateProductDto, CatalogProduct>();
-            CreateMap<UpdateProductDto, CatalogProduct>().IgnoerAllNonExisting();
+            CreateMap<UpdateProductDto, CatalogProduct>().IgnoreAllNonExisting();
         }      
     }
 }
