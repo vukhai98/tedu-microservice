@@ -23,7 +23,7 @@ namespace Inventory.Product.API.Entities
         public EDocumentType DocumentType { get; set; }
 
         [BsonElement("documentNo")]
-        public string DocumentNo { get; set; }
+        public string DocumentNo { get; set; } = new Guid().ToString();
 
         [BsonElement("itemNo")]
         public string ItemNo { get; set; }

@@ -8,11 +8,11 @@ namespace Shared.SeedWork
 {
     public class PagingRequestParameters
     {
-        private const int maxPageSize = 100;
+        private const int maxPageSize  = 100;
 
-        public int _pageSize = 10;
+        public int _pageSize { set; get; } = 10;
 
-        public int _pageNumber = 1;
+        public int _pageNumber { set; get; } = 1;
 
         private int PageNumber
         {

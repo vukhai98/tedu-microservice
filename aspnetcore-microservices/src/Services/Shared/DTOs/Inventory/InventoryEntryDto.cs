@@ -9,7 +9,7 @@ namespace Shared.DTOs.Inventory
 {
     public class InventoryEntryDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public EDocumentType DocumentType { get; set; }
 

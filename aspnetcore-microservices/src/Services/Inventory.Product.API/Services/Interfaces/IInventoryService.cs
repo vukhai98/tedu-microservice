@@ -2,13 +2,14 @@
 using Inventory.Product.API.Repositories.Interfaces;
 using MongoDB.Driver;
 using Shared.DTOs.Inventory;
+using Shared.SeedWork;
 
 namespace Inventory.Product.API.Services.Interfaces
 {
     public interface IInventoryService : IMogoDbRepositoryBase<InventoryEntry>
     {
         Task<IEnumerable<InventoryEntryDto>> GetAllByItemNoAsync(string itemNo);
-        Task<IEnumerable<InventoryEntryDto>> GetAllByItemNoPaggingAsync(GetInventoryPagingQuery query);
+        Task<PageList<InventoryEntryDto>> GetAllByItemNoPaggingAsync(GetInventoryPagingQuery query);
 
         Task<InventoryEntryDto> GetById(string id);
 
