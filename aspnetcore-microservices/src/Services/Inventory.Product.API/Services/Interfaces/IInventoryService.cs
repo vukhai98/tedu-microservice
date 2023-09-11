@@ -1,5 +1,5 @@
-﻿using Inventory.Product.API.Entities;
-using Inventory.Product.API.Repositories.Interfaces;
+﻿using Contracts.Domains.Interfaces;
+using Inventory.Product.API.Entities;
 using MongoDB.Driver;
 using Shared.DTOs.Inventory;
 using Shared.SeedWork;

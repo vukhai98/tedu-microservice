@@ -1,7 +1,12 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Inventory.Product.API.Entities.Abstraction
+namespace Contracts.Domains
 {
     public class MongoEntity
     {
@@ -11,7 +16,7 @@ namespace Inventory.Product.API.Entities.Abstraction
         public virtual string Id { get; set; }
 
         [BsonElement("createdDate")]
-        [BsonDateTimeOptions(Kind =DateTimeKind.Utc)]
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime CreatedDate { get; set; }
 
         [BsonElement("lastModifiedDate")]

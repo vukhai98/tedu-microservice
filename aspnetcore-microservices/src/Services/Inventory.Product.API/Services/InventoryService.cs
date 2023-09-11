@@ -11,7 +11,7 @@ using Shared.SeedWork;
 
 namespace Inventory.Product.API.Services
 {
-    public class InventoryService : MongoDbRepository<InventoryEntry>, IInventoryService
+    public class InventoryService : Contracts.Domains.MongoDbRepository<InventoryEntry>, IInventoryService
     {
         private readonly IMapper _mapper;
         public InventoryService(IMongoClient client, MongoDBSettings settings, IMapper mapper) : base(client, settings)

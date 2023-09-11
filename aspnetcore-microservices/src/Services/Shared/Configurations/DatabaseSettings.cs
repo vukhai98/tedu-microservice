@@ -9,5 +9,7 @@ namespace Shared.Configurations
     public class DatabaseSettings
     {
         public string ConnectionString { set; get; }
+
+        public string DBProvider { get; set; }
     }
 }

@@ -1,12 +1,10 @@
-﻿using Inventory.Product.API.Entities.Abstraction;
-using Inventory.Product.API.Extensions;
-using Inventory.Product.API.Repositories.Interfaces;
+﻿using Contracts.Domains;
+using Contracts.Domains.Interfaces;
 using MongoDB.Driver;
-using Org.BouncyCastle.Asn1.Crmf;
 using Shared.Configurations;
 using System.Linq.Expressions;
 
-namespace Inventory.Product.API.Repositories
+namespace IN
 {
     public class MongoDbRepository<T> : IMogoDbRepositoryBase<T> where T : MongoEntity
     {
