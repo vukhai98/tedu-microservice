@@ -1,31 +1,35 @@
 ﻿using AutoMapper;
+using Infrastructure.Extensions;
 using Inventory.Product.API.Entities;
-using Inventory.Product.API.Repositories;
 using Inventory.Product.API.Services.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Shared.Configurations;
 using Shared.DTOs.Inventory;
+using Shared.SeedWork;
 
 namespace Inventory.Product.API.Services
 {
-    public class InventoryService : MongoDbRepository<InventoryEntry>, IInventoryService
+    public class InventoryService : Contracts.Domains.MongoDbRepository<InventoryEntry>, IInventoryService
     {
         private readonly IMapper _mapper;
-        public InventoryService(IMongoClient client, MongoDBSettings settings) : base(client, settings)
+        public InventoryService(IMongoClient client, MongoDBSettings settings, IMapper mapper) : base(client, settings)
         {
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<InventoryEntryDto>> GetAllByItemNoAsync(string itemNo)
         {
             var entities = await FindAll().Find(x => x.ItemNo.Equals(itemNo)).ToListAsync();
 
+            //if (entities.Count == 0) return null;
+            
             var result = _mapper.Map<IEnumerable<InventoryEntryDto>>(entities);
 
             return result;
         }
 
-        public async Task<IEnumerable<InventoryEntryDto>> GetAllByItemNoPaggingAsync(GetInventoryPagingQuery query)
+        public async Task<PageList<InventoryEntryDto>> GetAllByItemNoPaggingAsync(GetInventoryPagingQuery query)
         {
             var filterSearchContent = Builders<InventoryEntry>.Filter.Empty;
 
@@ -38,11 +42,11 @@ namespace Inventory.Product.API.Services
 
             var andFilter = filterItemNo & filterSearchContent;
 
-            var pagedList = await Collection.Find(andFilter).Skip((query._pageNumber - 1) * query._pageSize)
-                                                             .Limit(query._pageSize)
-                                                             .ToListAsync();
+            var pagedList = await Collection.PaginatedListAsync(andFilter, query._pageNumber, query._pageSize);
 
-            var result = _mapper.Map<IEnumerable<InventoryEntryDto>>(pagedList);
+            var items= _mapper.Map<IEnumerable<InventoryEntryDto>>(pagedList);
+
+            var result = new PageList<InventoryEntryDto>(items, pagedList.GetMetaData().TotalItems,query._pageNumber,query._pageNumber);
 
             return result;
         }

@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace Shared.Configurations
 {
-    public class DatabaseSettings
+    public class GrpcSettings
     {
-        public string ConnectionString { set; get; }
-
-        public string DBProvider { get; set; }
+        public string StockUrl { get; set; }
     }
 }

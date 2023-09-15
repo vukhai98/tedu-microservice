@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Basket.API.Entities;
+using Basket.API.GrpcServices;
 using Basket.API.Repositories.Interfaces;
 using EventBus.Messages.IntegrationEvents.Events;
 using MassTransit;
@@ -15,16 +16,18 @@ namespace Basket.API.Controllers
     public class BasketsController : ControllerBase
     {
         private readonly IBasketRepository _repository;
+        private readonly StockItemGrpcService _stockItemGrpcService;
 
         private readonly IMapper _mapper;
 
         private readonly IPublishEndpoint _publishEndpoint;
 
-        public BasketsController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint)
+        public BasketsController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint, StockItemGrpcService stockItemGrpcService)
         {
             _repository = repository;
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
+            _stockItemGrpcService = stockItemGrpcService;
         }
         [HttpGet("{userName}")]
         public async Task<IActionResult> GetBasketByUserName([Required] string userName)
@@ -37,6 +40,13 @@ namespace Basket.API.Controllers
         [HttpPut("updateBasket")]
         public async Task<IActionResult> UpdateBasket([FromBody] Cart cart)
         {
+            // Consumer Grpc Services 
+            foreach (var item in cart.Items)
+            {
+                var quantityRespone = await _stockItemGrpcService.GetStock(item.ItemNo);
+
+                item.SetAvaliableItemPrice(quantityRespone.Quantity);
+            }
             var options = new DistributedCacheEntryOptions()
                                         .SetAbsoluteExpiration(DateTime.UtcNow.AddHours(1)) // Hạn của basket tồn tại trong bao lâu
                                         .SetSlidingExpiration(TimeSpan.FromMinutes(5)); // Kiểm tra  xem bao nhiêu lâu chưa gọi đến key đấy
@@ -68,7 +78,7 @@ namespace Basket.API.Controllers
             var eventMessage = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
             eventMessage.TotalPrice = basket.TotalPrice;
 
-             _publishEndpoint.Publish(eventMessage);
+            _publishEndpoint.Publish(eventMessage);
 
             // remove the basket 
             await _repository.DeleteBasketFromUserName(basketCheckout.UserName);

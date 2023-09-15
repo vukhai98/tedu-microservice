@@ -15,6 +15,6 @@ namespace Shared.DTOs.Inventory
 
         public void SetItemNo(string itemNo) => _itemNo = itemNo;
 
-        public string? SearchContent { get; set; }
+        public string SearchContent { get; set; }
     }
 }

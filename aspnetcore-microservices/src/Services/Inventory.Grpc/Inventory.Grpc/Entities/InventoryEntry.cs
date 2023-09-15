@@ -3,21 +3,16 @@ using Infrastructure.Extensions;
 using MongoDB.Bson.Serialization.Attributes;
 using Shared.Enums.Inventory;
 
-namespace Inventory.Product.API.Entities
+namespace Inventory.Grpc.Entities
 {
     [BsonCollection("InventoryEntries")]
     public class InventoryEntry : MongoEntity
     {
-        public InventoryEntry()
-        {
-            DocumentNo = Guid.NewGuid().ToString();
-            ExternalDocumentNo = Guid.NewGuid().ToString();
-        }
-        public InventoryEntry(string id)
-        {
-            Id = id;
-        }
+        //[BsonElement("itemNo")]
+        //public string ItemNo { get; set; }
 
+        //[BsonElement("quantity")]
+        //public int Quantity { get; set; }
         [BsonElement("documentType")]
         public EDocumentType DocumentType { get; set; }
 
@@ -32,6 +27,5 @@ namespace Inventory.Product.API.Entities
 
         [BsonElement("externalDocumentNo")]
         public string ExternalDocumentNo { get; set; }
-
     }
 }

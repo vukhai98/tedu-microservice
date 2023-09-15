@@ -1,5 +1,6 @@
 using Basket.API.AutoMapper;
 using Basket.API.Extensions;
+using Basket.API.GrpcServices;
 using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
 using Common.Logging;
@@ -15,10 +16,14 @@ Log.Information(messageTemplate: "Start Basket API up");
 
 try
 {
+    builder.Services.AddGrpc();
+
     // Register DI for services 
     builder.Services.ConfigureServices();
 
     builder.Services.AddConfigurationSettings(builder.Configuration);
+
+    builder.Services.ConfigureGrpcServices(builder.Configuration);
 
     // Register Redis 
     builder.Services.ConfigureRedis(builder.Configuration);
@@ -41,6 +46,8 @@ try
     builder.Services.AddSwaggerGen();
 
     var app = builder.Build();
+
+    app.MapGrpcService<StockItemGrpcService>();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
