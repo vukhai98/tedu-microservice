@@ -10,7 +10,6 @@ namespace Inventory.Product.API.Entities
     {
         public InventoryEntry()
         {
-            DocumentType = EDocumentType.Purchase;
             DocumentNo = Guid.NewGuid().ToString();
             ExternalDocumentNo = Guid.NewGuid().ToString();
         }
