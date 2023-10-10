@@ -64,16 +64,7 @@ namespace Basket.API.Extensions
 
             if (string.IsNullOrEmpty(grpcSettings.StockUrl))
                 throw new ArgumentNullException("Grpc connection string is not configured.");
-
-            //var channel = GrpcChannel.ForAddress(grpcSettings.StockUrl, new GrpcChannelOptions
-            //{
-            //    // Sử dụng HTTP/1.1 thay vì HTTP/2
-            //    HttpClient = new HttpClient(new HttpClientHandler
-            //    {
-            //        SslProtocols = SslProtocols.Tls12,
-            //        ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-            //    })
-            //});
+           
 
             services.AddGrpcClient<StockProtoService.StockProtoServiceClient >(x => x.Address = new Uri(grpcSettings.StockUrl));
 
