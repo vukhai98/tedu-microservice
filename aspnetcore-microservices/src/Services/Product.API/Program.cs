@@ -12,6 +12,7 @@ try
     builder.Host.UseSerilog(Serilogger.Configure);
     builder.Host.AddAppConfigurations();
     builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddConfigurationSettings(builder.Configuration);
     var app = builder.Build();
     app.UseInferastructure();
 

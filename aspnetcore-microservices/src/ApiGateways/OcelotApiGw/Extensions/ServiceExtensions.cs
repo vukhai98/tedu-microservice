@@ -7,11 +7,11 @@ namespace OcelotApiGw.Extensions
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection ConfigureServices(this IServiceCollection services)
-        {
+        //public static IServiceCollection ConfigureServices(this IServiceCollection services)
+        //{
 
-            return services;
-        }
+        //    return services;
+        //}
 
         public static IServiceCollection AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
         {
@@ -24,7 +24,7 @@ namespace OcelotApiGw.Extensions
             services.AddOcelot(configuration);
         }
 
-        public static void ConfigureCors(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
         {
             var origins = configuration["AllowOrigins"];
 
@@ -37,7 +37,8 @@ namespace OcelotApiGw.Extensions
                            .AllowAnyMethod();
                 });
             });
-            services.AddOcelot(configuration);
+
+            return services;
         }
 
     }

@@ -1,7 +1,8 @@
-using Common.Logging;
+﻿using Common.Logging;
 using Ocelot.Middleware;
 using OcelotApiGw.Extensions;
 using Serilog;
+using Ocelot.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(Serilogger.Configure);
@@ -10,13 +11,10 @@ Log.Information(messageTemplate: "Start OcelotApiGateWays startup");
 
 try
 {
-
     // Add services to the container.
-
     builder.Host.AddAppConfigurations();
     builder.Services.AddControllers();
     builder.Services.AddConfigurationSettings(builder.Configuration);
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     builder.Services.ConfigureOcelot(builder.Configuration);
@@ -28,29 +26,27 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{builder.Environment.ApplicationName}v1"));
     }
 
     app.UseCors("CorsPolicy");
 
-    //app.UseHttpsRedirection();
+    app.UseHttpsRedirection();
 
     app.UseAuthorization();
 
     app.MapControllers();
 
-    app.UseOcelot();
+    await app.UseOcelot();
 
     app.Run();
-
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, messageTemplate: "Unhanled exception");
+    Log.Fatal(ex, messageTemplate: $"Unhandled exception: {ex}");
 }
 finally
 {
     Log.Information(messageTemplate: "Shut down OcelotApiGateWays complete");
     Log.CloseAndFlush();
 }
-

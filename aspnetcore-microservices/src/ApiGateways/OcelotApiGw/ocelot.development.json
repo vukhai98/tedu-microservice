@@ -1,21 +1,17 @@
 {
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5000"
+    "BaseUrl": "http://localhost:5001" // Đây là địa chỉ của Ocelot
   },
-
-  "ReRoutes": [
-    // CustomerAPI: https://localhost:5003/api/customers
+  "Routes": [
     {
-      "UpstreamPathTemplate": "/api/customers/{username}",
-      "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "DownstreamPathTemplate": "/api/customers/{username}",
+      "UpstreamPathTemplate": "/customers/{userName}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/customers/{userName}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5003
+          "Port": 5003 // Địa chỉ của backend service
         }
       ]
     }

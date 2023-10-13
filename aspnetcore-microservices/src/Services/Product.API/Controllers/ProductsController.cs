@@ -1,5 +1,6 @@
 using AutoMapper;
 using Contracts.Common.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Product.API.Entities;
@@ -49,6 +50,7 @@ namespace Product.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
         {
             
@@ -65,6 +67,8 @@ namespace Product.API.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [Authorize]
+
         public async Task<IActionResult> UpdateProduct([Required] long id, [FromBody] UpdateProductDto productDto)
         {
             var product = await _repository.GetProduct(id);
@@ -81,6 +85,7 @@ namespace Product.API.Controllers
             return Ok(result);
         }
         [HttpPut("/{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateProduct([FromQuery]long id)
         {
             var product = await _repository.GetProduct(id);
