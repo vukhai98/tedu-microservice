@@ -12,7 +12,7 @@ using System.Net;
 namespace Basket.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class BasketsController : ControllerBase
     {
         private readonly IBasketRepository _repository;

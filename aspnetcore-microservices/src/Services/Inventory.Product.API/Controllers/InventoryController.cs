@@ -8,7 +8,7 @@ using System.Net;
 namespace Inventory.Product.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class InventoryController : ControllerBase
     {
         private readonly IInventoryService _inventoryService;
