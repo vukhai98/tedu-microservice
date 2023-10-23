@@ -16,6 +16,7 @@ Log.Information(messageTemplate: "Start Basket API up");
 
 try
 {
+    builder.Host.AddAppConfigurations();
     builder.Services.AddGrpc();
 
     // Register DI for services 

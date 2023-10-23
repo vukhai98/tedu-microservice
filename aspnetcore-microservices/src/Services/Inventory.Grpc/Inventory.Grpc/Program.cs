@@ -13,6 +13,7 @@ Log.Information(messageTemplate: "Start Inventory.Grpc startup");
 try
 {
 
+    builder.Host.AddAppConfigurations();
     builder.Services.AddInfratructureServices();
     builder.Services.AddConfigurationSettings(builder.Configuration);
     builder.Services.ConfigurationMongoDBClient();
