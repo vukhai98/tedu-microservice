@@ -13,6 +13,247 @@
           "Host": "localhost",
           "Port": 5003
         }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    // ProductAPI
+    {
+      "UpstreamPathTemplate": "/products",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/products",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "RateLimitOptions": { // Limit Request
+        "ClientWhitelist": [], // The client in this array wwill not be affected by the rate limit
+        "EnableRateLimiting": true,
+        "Period": "10s", // 1s,5m,1h,1h,1m 
+        "PeriodTimespan": 2, // retry after a certain number of seconds
+        "Limit": 5 // the maximum number of request that a client can make in a defined period
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2, // If the service doesn't respone for 2 second, it will throw a timeout
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 5000 //If the service throws a second exception, the service will not be accessible for five second
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 15
+      },
+      "SwaggerKey": "product-service"
+    },
+    {
+      "UpstreamPathTemplate": "/products",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/products",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "RateLimitOptions": { // Limit Request
+        "ClientWhitelist": [], // The client in this array wwill not be affected by the rate limit
+        "EnableRateLimiting": true,
+        "Period": "2s", // 1s,5m,1h,1h,1m 
+        "PeriodTimespan": 1, // retry after a certain number of seconds
+        "Limit": 1 // the maximum number of request that a client can make in a defined period
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2, // If the service doesn't respone for 2 second, it will throw a timeout
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 5000 //If the service throws a second exception, the service will not be accessible for five second
+      },
+
+      "SwaggerKey": "product-service"
+    },
+    {
+      "UpstreamPathTemplate": "/products/{any}",
+      "UpstreamHttpMethod": [ "GET", "PUT" ],
+      "DownstreamPathTemplate": "/api/products/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/products/get-by-product-no/{any}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/products/get-by-product-no/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "SwaggerKey": "product-service"
+    },
+    // Basket API
+    {
+      "UpstreamPathTemplate": "/baskets/{any}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "DownstreamPathTemplate": "/api/baskets/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5004
+        }
+      ],
+      "SwaggerKey": "basket-service"
+    },
+    {
+      "UpstreamPathTemplate": "/baskets/updatebasket",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "DownstreamPathTemplate": "/api/baskets/updatebasket",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5004
+        }
+      ],
+      "SwaggerKey": "basket-service"
+    },
+    {
+      "UpstreamPathTemplate": "/baskets/checkout",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/baskets/checkout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5004
+        }
+      ],
+      "SwaggerKey": "basket-service"
+    },
+    // API Inventory.Product.API
+    {
+      "UpstreamPathTemplate": "/inventory/items/{any}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/inventory/items/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5006
+        }
+      ],
+      "SwaggerKey": "inventory-service"
+
+    },
+    {
+      "UpstreamPathTemplate": "/inventory/items/{any}/paging",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/inventory/items/{any}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5006
+        }
+      ],
+      "SwaggerKey": "inventory-service"
+    },
+    {
+      "UpstreamPathTemplate": "/inventory/item/{any}",
+      "UpstreamHttpMethod": [ "GET", "DELETE", "POST" ],
+      "DownstreamPathTemplate": "/api/inventory/item/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5006
+        }
+      ],
+      "SwaggerKey": "inventory-service"
+    },
+    // OrderAPI
+    {
+      "UpstreamPathTemplate": "/v1/order",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "DownstreamPathTemplate": "/api/v1/order",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "order-service"
+    },
+    {
+      "UpstreamPathTemplate": "/v1/order/{any}",
+      "UpstreamHttpMethod": [ "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/v1/order/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "order-service"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "customer-service",
+      "Config": [
+        {
+          "Name": "Customer API",
+          "Version": "v1",
+          "Url": "http://localhost:5003/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "product-service",
+      "Config": [
+        {
+          "Name": "Product API",
+          "Version": "v1",
+          "Url": "http://localhost:5002/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "order-service",
+      "Config": [
+        {
+          "Name": "Order API",
+          "Version": "v1",
+          "Url": "http://localhost:5005/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "inventory-service",
+      "Config": [
+        {
+          "Name": "Inventory API",
+          "Version": "v1",
+          "Url": "http://localhost:5006/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "basket-service",
+      "Config": [
+        {
+          "Name": "Basket API",
+          "Version": "v1",
+          "Url": "http://localhost:5004/swagger/v1/swagger.json"
+        }
       ]
     }
   ]

@@ -18,7 +18,7 @@ namespace Product.API.Controllers
         private readonly IProductRepository _repository;
 
         private readonly IMapper _mapper;
-
+         
         public ProductsController(IProductRepository repository, IMapper mapper)
         {
             _repository = repository;
@@ -50,7 +50,7 @@ namespace Product.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
         {
             
@@ -67,7 +67,7 @@ namespace Product.API.Controllers
         }
 
         [HttpPut("{id:long}")]
-        [Authorize]
+        //[Authorize]
 
         public async Task<IActionResult> UpdateProduct([Required] long id, [FromBody] UpdateProductDto productDto)
         {
@@ -84,27 +84,33 @@ namespace Product.API.Controllers
             var result = _mapper.Map<ProductDto>(product);
             return Ok(result);
         }
-        [HttpPut("/{id}")]
-        [Authorize]
-        public async Task<IActionResult> UpdateProduct([FromQuery]long id)
-        {
-            var product = await _repository.GetProduct(id);
 
-            if (product == null)
-                return NotFound();
+        //[HttpPut("{id:long}")]
+        ////[Authorize]
+        //public async Task<IActionResult> UpdateProduct([FromQuery]long id)
+        //{
+        //    var product = await _repository.GetProduct(id);
 
-            await _repository.DeleteAsync(product);
+        //    if (product == null)
+        //        return NotFound();
 
-            await _repository.SaveChangesAsync();
+        //    await _repository.DeleteAsync(product);
 
-            var result = _mapper.Map<ProductDto>(product);
-            return Ok(result);
-        }
+        //    await _repository.SaveChangesAsync();
+
+        //    var result = _mapper.Map<ProductDto>(product);
+        //    return Ok(result);
+        //}
 
         #endregion
 
         #region Additional Resources
-        [HttpGet("{productNo}")]
+        /// <summary>
+        /// get-by-product-no
+        /// </summary>
+        /// <param name="productNo"></param>
+        /// <returns></returns>
+        [HttpGet("get-by-product-no/{productNo}")]
         public async Task<IActionResult> UpdateProduct([Required] string productNo)
         {
             var product = await _repository.GetProductByNo(productNo);

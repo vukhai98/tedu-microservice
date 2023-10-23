@@ -25,17 +25,30 @@ try
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{builder.Environment.ApplicationName}v1"));
+        //app.UseSwagger();
+        //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{builder.Environment.ApplicationName}v1"));
     }
 
     app.UseCors("CorsPolicy");
+    app.UseRouting();
+    //app.UseHttpsRedirection();
 
-    app.UseHttpsRedirection();
+    //app.UseAuthorization();
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapGet("/", context =>
+        {
+            // await context.Response.WriteAsync($"Hello TEDU members! This is {builder.Environment.ApplicationName}");
+            context.Response.Redirect("swagger/index.html");
+            return Task.CompletedTask;
+        });
+    });
 
-    app.UseAuthorization();
-
-    app.MapControllers();
+    app.UseSwaggerForOcelotUI(
+        opt =>
+        {
+            opt.PathToSwaggerGenerator = "/swagger/docs";
+        });
 
     await app.UseOcelot();
     app.Run();

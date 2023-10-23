@@ -11,8 +11,8 @@ using Product.API.Persistence;
 namespace Product.API.Persistence.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    [Migration("20230530053742_Product_Set_No_IsUnique")]
-    partial class Product_Set_No_IsUnique
+    [Migration("20231023043418_InitDB")]
+    partial class InitDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,9 +51,6 @@ namespace Product.API.Persistence.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("No")
-                        .IsUnique();
 
                     b.ToTable("Products");
                 });
