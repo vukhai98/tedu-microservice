@@ -13,12 +13,13 @@
           "Host": "localhost",
           "Port": 5003
         }
-      ]
+      ],
+      "SwaggerKey": "customer-service"
     },
     // ProductAPI
     {
       "UpstreamPathTemplate": "/products",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [ "GET" ],
       "DownstreamPathTemplate": "/api/products",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -26,7 +27,46 @@
           "Host": "localhost",
           "Port": 5002
         }
-      ]
+      ],
+      "RateLimitOptions": { // Limit Request
+        "ClientWhitelist": [], // The client in this array wwill not be affected by the rate limit
+        "EnableRateLimiting": true,
+        "Period": "10s", // 1s,5m,1h,1h,1m 
+        "PeriodTimespan": 2, // retry after a certain number of seconds
+        "Limit": 5 // the maximum number of request that a client can make in a defined period
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2, // If the service doesn't respone for 2 second, it will throw a timeout
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 5000 //If the service throws a second exception, the service will not be accessible for five second
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 15
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/products",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/products",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "RateLimitOptions": { // Limit Request
+        "ClientWhitelist": [], // The client in this array wwill not be affected by the rate limit
+        "EnableRateLimiting": true,
+        "Period": "2s", // 1s,5m,1h,1h,1m 
+        "PeriodTimespan": 1, // retry after a certain number of seconds
+        "Limit": 1 // the maximum number of request that a client can make in a defined period
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2, // If the service doesn't respone for 2 second, it will throw a timeout
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 5000 //If the service throws a second exception, the service will not be accessible for five second
+      }
     },
     {
       "UpstreamPathTemplate": "/products/{any}",
@@ -148,6 +188,18 @@
         {
           "Host": "localhost",
           "Port": 5005
+        }
+      ]
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "customer-service",
+      "Config": [
+        {
+          "Name": "Customer API",
+          "Version": "v1",
+          "Url": "http://localhost:5003/swagger/v1/swagger.json"
         }
       ]
     }

@@ -2,6 +2,8 @@
 using Infrastructure.Extensions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Ocelot.DependencyInjection;
+using Ocelot.Provider.Polly;
+using Ocelot.Cache.CacheManager;
 
 namespace OcelotApiGw.Extensions
 {
@@ -21,7 +23,15 @@ namespace OcelotApiGw.Extensions
 
         public static void ConfigureOcelot(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddOcelot(configuration);
+            services.AddOcelot(configuration).AddPolly().AddCacheManager(x =>
+            {
+                x.WithDictionaryHandle();
+            });
+
+            services.AddSwaggerForOcelot(configuration, x =>
+            {
+                x.GenerateDocsForGatewayItSelf = false;
+            });
         }
 
         public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration)
