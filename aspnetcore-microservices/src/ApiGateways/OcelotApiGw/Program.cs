@@ -38,7 +38,6 @@ try
     app.MapControllers();
 
     await app.UseOcelot();
-
     app.Run();
 }
 catch (Exception ex)

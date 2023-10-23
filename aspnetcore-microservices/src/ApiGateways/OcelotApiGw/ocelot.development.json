@@ -11,7 +11,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5003 // Địa chỉ của backend service
+          "Port": 5003
         }
       ]
     }
