@@ -42,7 +42,8 @@
       },
       "FileCacheOptions": {
         "TtlSeconds": 15
-      }
+      },
+      "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/products",
@@ -66,7 +67,9 @@
         "ExceptionsAllowedBeforeBreaking": 2, // If the service doesn't respone for 2 second, it will throw a timeout
         "DurationOfBreak": 1000,
         "TimeoutValue": 5000 //If the service throws a second exception, the service will not be accessible for five second
-      }
+      },
+
+      "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/products/{any}",
@@ -90,9 +93,10 @@
           "Host": "localhost",
           "Port": 5002
         }
-      ]
+      ],
+      "SwaggerKey": "product-service"
     },
-    // Basket API 
+    // Basket API
     {
       "UpstreamPathTemplate": "/baskets/{any}",
       "UpstreamHttpMethod": [ "GET", "DELETE" ],
@@ -103,7 +107,8 @@
           "Host": "localhost",
           "Port": 5004
         }
-      ]
+      ],
+      "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/baskets/updatebasket",
@@ -115,7 +120,8 @@
           "Host": "localhost",
           "Port": 5004
         }
-      ]
+      ],
+      "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/baskets/checkout",
@@ -127,7 +133,8 @@
           "Host": "localhost",
           "Port": 5004
         }
-      ]
+      ],
+      "SwaggerKey": "basket-service"
     },
     // API Inventory.Product.API
     {
@@ -140,7 +147,9 @@
           "Host": "localhost",
           "Port": 5006
         }
-      ]
+      ],
+      "SwaggerKey": "inventory-service"
+
     },
     {
       "UpstreamPathTemplate": "/inventory/items/{any}/paging",
@@ -152,7 +161,8 @@
           "Host": "localhost",
           "Port": 5006
         }
-      ]
+      ],
+      "SwaggerKey": "inventory-service"
     },
     {
       "UpstreamPathTemplate": "/inventory/item/{any}",
@@ -164,7 +174,8 @@
           "Host": "localhost",
           "Port": 5006
         }
-      ]
+      ],
+      "SwaggerKey": "inventory-service"
     },
     // OrderAPI
     {
@@ -177,7 +188,8 @@
           "Host": "localhost",
           "Port": 5005
         }
-      ]
+      ],
+      "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/v1/order/{any}",
@@ -189,7 +201,8 @@
           "Host": "localhost",
           "Port": 5005
         }
-      ]
+      ],
+      "SwaggerKey": "order-service"
     }
   ],
   "SwaggerEndPoints": [
@@ -200,6 +213,46 @@
           "Name": "Customer API",
           "Version": "v1",
           "Url": "http://localhost:5003/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "product-service",
+      "Config": [
+        {
+          "Name": "Product API",
+          "Version": "v1",
+          "Url": "http://localhost:5002/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "order-service",
+      "Config": [
+        {
+          "Name": "Order API",
+          "Version": "v1",
+          "Url": "http://localhost:5005/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "inventory-service",
+      "Config": [
+        {
+          "Name": "Inventory API",
+          "Version": "v1",
+          "Url": "http://localhost:5006/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "basket-service",
+      "Config": [
+        {
+          "Name": "Basket API",
+          "Version": "v1",
+          "Url": "http://localhost:5004/swagger/v1/swagger.json"
         }
       ]
     }

@@ -33,24 +33,23 @@ try
     app.UseRouting();
     //app.UseHttpsRedirection();
 
-    app.UseAuthorization();
-
+    //app.UseAuthorization();
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapGet("/", context =>
         {
+            // await context.Response.WriteAsync($"Hello TEDU members! This is {builder.Environment.ApplicationName}");
             context.Response.Redirect("swagger/index.html");
-
             return Task.CompletedTask;
-
         });
     });
-    //app.MapControllers();
+
     app.UseSwaggerForOcelotUI(
-        options =>
+        opt =>
         {
-            options.PathToSwaggerGenerator = "/swagger/docs";
+            opt.PathToSwaggerGenerator = "/swagger/docs";
         });
+
     await app.UseOcelot();
     app.Run();
 }

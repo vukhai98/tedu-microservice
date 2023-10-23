@@ -27,7 +27,6 @@ namespace OcelotApiGw.Extensions
             {
                 x.WithDictionaryHandle();
             });
-
             services.AddSwaggerForOcelot(configuration, x =>
             {
                 x.GenerateDocsForGatewayItSelf = false;
