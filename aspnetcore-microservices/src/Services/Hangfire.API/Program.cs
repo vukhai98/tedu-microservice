@@ -1,4 +1,5 @@
 using Hangfire.API.Extensions;
+using Infrastructure.ScheduledJobs;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,9 @@ try
     builder.Host.AddAppConfigurations();
 
     builder.Services.AddControllers();
+    builder.Services.AddHangFireFServiceCustom();
+    builder.Services.AddConfigurationSettings(builder.Configuration);
+
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
@@ -21,17 +25,23 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{builder.Environment.ApplicationName}v1"));
     }
+
+    app.UseRouting();
 
     app.UseHttpsRedirection();
 
     app.UseAuthorization();
 
-    app.MapControllers();
+    app.UseHangfireDashboard(builder.Configuration);
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapDefaultControllerRoute();
+    });
 
     app.Run();
-
 }
 catch (Exception ex)
 {

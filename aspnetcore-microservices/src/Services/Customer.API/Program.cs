@@ -1,13 +1,16 @@
 using Common.Logging;
 using Contracts.Common.Interfaces;
+using Customer.API.Extensions;
 using Customer.API.Repositories;
 using Customer.API.Repositories.Interfaces;
 using Customer.API.Services;
 using Customer.API.Services.Interfaces;
 using Infrastructure.Common;
+using Infrastructure.ScheduledJobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Shared.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +23,8 @@ try
     builder.Services.AddDbContext<CustomerContext>(options =>
            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
+    builder.Services.AddSingleton(builder.Configuration.GetSection(nameof(HangFireSettings)).Get<HangFireSettings>());
+
     builder.Services.AddControllers();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -30,6 +35,8 @@ try
                     .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
                     .AddScoped(typeof(ICustomerServices), typeof(CustomerServices))
                     .AddScoped(typeof(ICustomerRepository), typeof(CustomerRepository));
+
+    builder.Services.AddHangFireFServiceCustom();
 
     var app = builder.Build();
 
@@ -50,7 +57,7 @@ try
     app.UseHttpsRedirection();
 
     app.UseAuthorization();
-
+    app.UseHangfireDashboard(builder.Configuration);
     app.MapControllers();
 
     app.Run();
