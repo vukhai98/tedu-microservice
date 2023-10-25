@@ -8,6 +8,7 @@ using EventBus.Messages.IntegrationEvents.Events;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Shared.DTOs.Baskets;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
@@ -21,7 +22,7 @@ namespace Basket.API.Controllers
         private readonly StockItemGrpcService _stockItemGrpcService;
 
         private readonly IMapper _mapper;
-        
+
 
         private readonly IPublishEndpoint _publishEndpoint;
 
@@ -31,21 +32,23 @@ namespace Basket.API.Controllers
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
             _stockItemGrpcService = stockItemGrpcService;
-          
+
         }
         [HttpGet("{userName}")]
-        public async Task<IActionResult> GetBasketByUserName([Required] string userName)
+        public async Task<ActionResult<CartDTO>> GetBasketByUserName([Required] string userName)
         {
-            var result = await _repository.GetBasketByUserName(userName);
+            var cart = await _repository.GetBasketByUserName(userName);
 
-            return Ok(result ?? new Cart());
+            var result = _mapper.Map<CartDTO>(cart);
+
+            return Ok(result);
         }
 
         [HttpPut("updateBasket")]
-        public async Task<IActionResult> UpdateBasket([FromBody] Cart cart)
+        public async Task<IActionResult> UpdateBasket([FromBody] CartDTO request)
         {
             // Consumer Grpc Services 
-            foreach (var item in cart.Items)
+            foreach (var item in request.Items)
             {
                 var quantityRespone = await _stockItemGrpcService.GetStock(item.ItemNo);
 
@@ -54,7 +57,10 @@ namespace Basket.API.Controllers
             var options = new DistributedCacheEntryOptions()
                                         .SetAbsoluteExpiration(DateTime.UtcNow.AddHours(1)) // Hạn của basket tồn tại trong bao lâu
                                         .SetSlidingExpiration(TimeSpan.FromMinutes(5)); // Kiểm tra  xem bao nhiêu lâu chưa gọi đến key đấy
-            var result = await _repository.UpdateBasket(cart, options);
+
+            var cart = _mapper.Map<Cart>(request);
+            var updateCart = await _repository.UpdateBasket(cart, options);
+            var result = _mapper.Map<CartDTO>(updateCart);
 
             return Ok(result);
         }

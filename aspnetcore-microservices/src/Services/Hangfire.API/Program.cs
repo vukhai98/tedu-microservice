@@ -1,5 +1,9 @@
+using Contracts.Services;
 using Hangfire.API.Extensions;
+using Hangfire.API.Services.Interfaces;
+using Hangfire.API.Services;
 using Infrastructure.ScheduledJobs;
+using Infrastructure.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +14,8 @@ try
 {
     // Add services to the container.
     builder.Host.AddAppConfigurations();
-
+    builder.Services.AddConfigurationServices();
+   
     builder.Services.AddControllers();
     builder.Services.AddHangFireFServiceCustom();
     builder.Services.AddConfigurationSettings(builder.Configuration);

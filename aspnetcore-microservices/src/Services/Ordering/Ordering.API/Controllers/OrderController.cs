@@ -76,7 +76,7 @@ namespace Ordering.API.Controllers
                 ToAddress = "khaivm@runsystem.net"
             };
 
-            await _smtpEmailService.SendEmailAsync(message);
+             _smtpEmailService.SendEmail(message);
             return Ok();
         }
     }

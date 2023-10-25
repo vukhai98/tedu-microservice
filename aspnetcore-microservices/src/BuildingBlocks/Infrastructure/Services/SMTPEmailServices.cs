@@ -3,7 +3,7 @@ using Contracts.Services;
 using Infrastructure.Configurations;
 using MailKit.Net.Smtp;
 using MimeKit;
-using Serilog;
+using ILogger = Serilog.ILogger;
 using Shared.Services.Email;
 using System;
 using System.Collections.Generic;
@@ -11,16 +11,17 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Services
 {
     public class SMTPEmailServices : ISmtpEmailService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<SMTPEmailServices> _logger;
         private readonly SmtpEmailSettings _settings;
         private readonly SmtpClient _smtpClient;
 
-        public SMTPEmailServices(ILogger logger, SmtpEmailSettings settings)
+        public SMTPEmailServices(ILogger<SMTPEmailServices> logger, SmtpEmailSettings settings)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -43,7 +44,7 @@ namespace Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message, ex);
+                _logger.LogError(ex.Message, ex);
             }
             finally
             {
@@ -68,7 +69,7 @@ namespace Infrastructure.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message, ex);
+                _logger.LogError(ex.Message, ex);
             }
             finally
             {

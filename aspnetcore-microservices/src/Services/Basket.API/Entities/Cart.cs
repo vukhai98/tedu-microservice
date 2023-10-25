@@ -19,5 +19,6 @@
         public decimal TotalPrice => Items.Sum(x => x.ItemPrice * x.Quantity);
 
         public DateTimeOffset LastModifiedDate { get; set; } = DateTime.UtcNow;
+        public string? JobId { get; set; } 
     }
 }
