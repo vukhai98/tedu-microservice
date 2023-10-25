@@ -1,8 +1,11 @@
 ﻿using Basket.API.Entities;
 using Basket.API.Repositories.Interfaces;
+using Basket.API.Services.Interfaces;
+using Basket.API.Services;
 using Contracts.Common.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using ILogger = Serilog.ILogger;
+using Shared.DTOs.ScheduledJob;
 
 namespace Basket.API.Repositories
 {
@@ -12,12 +15,15 @@ namespace Basket.API.Repositories
 
         private readonly IDistributedCache _redisCacheService;
         private readonly ILogger<BasketRepository> _logger;
-
-        public BasketRepository(ISerializeService serializeService, IDistributedCache redisCacheService, ILogger<BasketRepository> logger)
+        private readonly IEmailTemplateService _emailTemplateService;
+        private readonly BackgroundJobHttpService _backgroundJobHttpService;
+        public BasketRepository(ISerializeService serializeService, IDistributedCache redisCacheService, ILogger<BasketRepository> logger, IEmailTemplateService emailTemplateService, BackgroundJobHttpService backgroundJobHttpService)
         {
             _serializeService = serializeService;
             _redisCacheService = redisCacheService;
             _logger = logger;
+            _emailTemplateService = emailTemplateService;
+            _backgroundJobHttpService = backgroundJobHttpService;
         }
 
         public async Task<bool> DeleteBasketFromUserName(string userName)
@@ -71,9 +77,34 @@ namespace Basket.API.Repositories
 
             _logger.LogInformation($"END: Update Basket for {cart.UserName}");
 
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex.Message);
+            }
+
             var result = await GetBasketByUserName(key);
 
             return result;
+        }
+
+        private async Task TriggerSendEmailReminderCheckout(Cart cart)
+        {
+            var emailTemplate = _emailTemplateService.GenerateReminderCheckoutOrderEmail(cart.UserName);
+
+            var model = new ReminderCheckoutOrderDto()
+            {
+                enqueueAt = DateTime.UtcNow.AddSeconds(30),
+                Email = cart.EmailAddress,
+                EmailContent = emailTemplate,
+                Subject= "Reminder check out"
+            };
+
+
         }
     }
 }

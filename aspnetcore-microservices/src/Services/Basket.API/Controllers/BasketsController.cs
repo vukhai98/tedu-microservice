@@ -2,6 +2,8 @@
 using Basket.API.Entities;
 using Basket.API.GrpcServices;
 using Basket.API.Repositories.Interfaces;
+using Basket.API.Services;
+using Basket.API.Services.Interfaces;
 using EventBus.Messages.IntegrationEvents.Events;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +21,7 @@ namespace Basket.API.Controllers
         private readonly StockItemGrpcService _stockItemGrpcService;
 
         private readonly IMapper _mapper;
+        
 
         private readonly IPublishEndpoint _publishEndpoint;
 
@@ -28,6 +31,7 @@ namespace Basket.API.Controllers
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
             _stockItemGrpcService = stockItemGrpcService;
+          
         }
         [HttpGet("{userName}")]
         public async Task<IActionResult> GetBasketByUserName([Required] string userName)
@@ -85,6 +89,5 @@ namespace Basket.API.Controllers
 
             return Accepted();
         }
-
     };
 }
