@@ -1,7 +1,8 @@
-﻿using Serilog;
+﻿using Hangfire;
+using Serilog;
 using Shared.Configurations;
 
-namespace Hangfire.API.Extensions
+namespace Customer.API.Extensions
 {
     public static class HostExtensions
     {

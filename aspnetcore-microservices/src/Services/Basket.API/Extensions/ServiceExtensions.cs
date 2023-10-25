@@ -14,6 +14,8 @@ using System.Net;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using System.Security.Authentication;
 using Basket.API.Protos;
+using Basket.API.Services.Interfaces;
+using Basket.API.Services;
 
 namespace Basket.API.Extensions
 {
@@ -22,7 +24,8 @@ namespace Basket.API.Extensions
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
         {
             services.AddScoped<ISerializeService, SerializeService>()
-                    .AddScoped<IBasketRepository, BasketRepository>();
+                    .AddScoped<IBasketRepository, BasketRepository>()
+                    .AddScoped<IEmailTemplateService, BasketEmailTemplateService>();
 
             return services;
         }
@@ -40,6 +43,10 @@ namespace Basket.API.Extensions
             var grpcSettings = configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>();
 
             services.AddSingleton(grpcSettings);
+
+            var backgroundJobSettings = configuration.GetSection(nameof(BackgroundJobSettings)).Get<BackgroundJobSettings>();
+
+            services.AddSingleton(backgroundJobSettings);
 
             return services;
         }
@@ -64,11 +71,18 @@ namespace Basket.API.Extensions
 
             if (string.IsNullOrEmpty(grpcSettings.StockUrl))
                 throw new ArgumentNullException("Grpc connection string is not configured.");
-           
 
-            services.AddGrpcClient<StockProtoService.StockProtoServiceClient >(x => x.Address = new Uri(grpcSettings.StockUrl));
+
+            services.AddGrpcClient<StockProtoService.StockProtoServiceClient>(x => x.Address = new Uri(grpcSettings.StockUrl));
 
             services.AddScoped<StockItemGrpcService>();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureHttpClientServices(this IServiceCollection services)
+        {
+            services.AddHttpClient<BackgroundJobHttpService>();
 
             return services;
         }

@@ -25,6 +25,7 @@ try
     builder.Services.AddConfigurationSettings(builder.Configuration);
 
     builder.Services.ConfigureGrpcServices(builder.Configuration);
+    builder.Services.ConfigureHttpClientServices();
 
     // Register Redis 
     builder.Services.ConfigureRedis(builder.Configuration);
