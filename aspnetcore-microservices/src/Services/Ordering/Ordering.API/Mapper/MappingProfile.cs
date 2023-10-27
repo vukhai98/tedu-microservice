@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using EventBus.Messages.IntegrationEvents.Events;
 using Infrastructure.Mappings;
-using Ordering.Application.Common.Models;
 using Ordering.Application.Features.V1.Orders.Commands.Create;
 using Ordering.Application.Features.V1.Orders.Commands.Update;
 using Ordering.Application.Features.V1.Orders.Common;
 using Ordering.Domain.Entities;
+using Shared.DTOs.Orders;
 
 namespace Ordering.API.Mapper
 {
@@ -15,6 +15,7 @@ namespace Ordering.API.Mapper
         {
 
             CreateMap<Order, OrderDto>().ReverseMap();
+            CreateMap<CreateOrderDto, CreateOrderCommand>().ReverseMap();
 
             CreateMap<CreateOrderCommand, Order>().ReverseMap();
 

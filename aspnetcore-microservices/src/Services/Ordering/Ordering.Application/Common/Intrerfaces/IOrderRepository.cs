@@ -14,6 +14,8 @@ namespace Ordering.Application.Common.Intrerfaces
 
         Task<Order> UpdateOrderAsync(Order order);
 
+        Task<Order> GetOrderByDocumentNo(string documentNo);
+
         Task<Order> CreateOrderAsync(Order order);
     }
 }

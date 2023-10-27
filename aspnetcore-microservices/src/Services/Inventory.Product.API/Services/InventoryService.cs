@@ -18,12 +18,19 @@ namespace Inventory.Product.API.Services
             _mapper = mapper;
         }
 
+        public async Task DeleteByDocumentNoAsync(string documentNo)
+        {
+            var filter = Builders<InventoryEntry>.Filter.Eq(x => x.DocumentNo.ToString(), documentNo);
+
+            await Collection.DeleteOneAsync(filter);
+        }
+
         public async Task<IEnumerable<InventoryEntryDto>> GetAllByItemNoAsync(string itemNo)
         {
             var entities = await FindAll().Find(x => x.ItemNo.Equals(itemNo)).ToListAsync();
 
             //if (entities.Count == 0) return null;
-            
+
             var result = _mapper.Map<IEnumerable<InventoryEntryDto>>(entities);
 
             return result;
@@ -44,9 +51,9 @@ namespace Inventory.Product.API.Services
 
             var pagedList = await Collection.PaginatedListAsync(andFilter, query._pageNumber, query._pageSize);
 
-            var items= _mapper.Map<IEnumerable<InventoryEntryDto>>(pagedList);
+            var items = _mapper.Map<IEnumerable<InventoryEntryDto>>(pagedList);
 
-            var result = new PageList<InventoryEntryDto>(items, pagedList.GetMetaData().TotalItems,query._pageNumber,query._pageNumber);
+            var result = new PageList<InventoryEntryDto>(items, pagedList.GetMetaData().TotalItems, query._pageNumber, query._pageNumber);
 
             return result;
         }
@@ -74,6 +81,24 @@ namespace Inventory.Product.API.Services
             await CreatAsync(entity);
 
             return _mapper.Map<InventoryEntryDto>(entity);
+        }
+
+        public async Task<InventoryEntryDto> SalesItemAsync(string itemNo, SalesProductDto model)
+        {
+            var itemToAdd = new InventoryEntry(ObjectId.GenerateNewId().ToString())
+            {
+                ItemNo = itemNo,
+                ExternalDocumentNo = model.ExternelDocumentNo,
+                Quantity = model.Quantity * -1,
+                DocumentType = model.DocumentType
+            };
+
+            await CreatAsync(itemToAdd);
+
+            var result = _mapper.Map<InventoryEntryDto>(itemToAdd);
+
+            return result;
+
         }
     }
 }

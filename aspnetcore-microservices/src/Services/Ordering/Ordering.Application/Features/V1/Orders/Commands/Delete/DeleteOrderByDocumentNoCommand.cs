@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Shared.SeedWork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Ordering.Application.Features.V1.Orders.Commands.Delete
 {
-    public class DeleteOrderCommand : IRequest<long>
+    public class DeleteOrderByDocumentNoCommand : IRequest<ApiResult<bool>>
     {
-        public long Id { get;  set; }
+        public string DocumentNo { get;  set; }
 
     }
 }

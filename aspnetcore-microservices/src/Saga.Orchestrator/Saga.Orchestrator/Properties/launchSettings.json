@@ -4,17 +4,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:11147",
-      "sslPort": 44300
+      "applicationUrl": "http://localhost:12725",
+      "sslPort": 44389
     }
   },
   "profiles": {
-    "Ordering.API": {
+    "Saga.Orchestrator": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5005",
+      "applicationUrl": ";http://localhost:5009",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

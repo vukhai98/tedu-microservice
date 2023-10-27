@@ -5,17 +5,18 @@ using Microsoft.Extensions.Logging;
 using Ordering.Application.Common.Exceptions;
 using Ordering.Application.Common.Intrerfaces;
 using Ordering.Domain.Entities;
+using Shared.SeedWork;
 
 namespace Ordering.Application.Features.V1.Orders.Commands.Delete
 {
-    public class DeleteOrderHandler : IRequestHandler<DeleteOrderCommand, long>
+    public class DeleteOrderByDocumentNoHandler : IRequestHandler<DeleteOrderByDocumentNoCommand, ApiResult<bool>>
     {
         private readonly IMapper _mapper;
         private readonly ILogger<DeleteOrderHandler> _logger;
         private readonly IOrderRepository _orderRepository;
         private readonly ISmtpEmailService _emailService;
         private const string MethodName = "UpdateOrderCommandHandler";
-        public DeleteOrderHandler(IMapper mapper, IOrderRepository orderRepository, ILogger<DeleteOrderHandler> logger, ISmtpEmailService emailService)
+        public DeleteOrderByDocumentNoHandler(IMapper mapper, IOrderRepository orderRepository, ILogger<DeleteOrderHandler> logger, ISmtpEmailService emailService)
         {
             _mapper = mapper ?? throw new ArgumentException(nameof(mapper));
             _orderRepository = orderRepository ?? throw new ArgumentException(nameof(orderRepository));
@@ -23,14 +24,14 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Delete
             _emailService = emailService ?? throw new ArgumentException(nameof(emailService));
         }
 
-        public async Task<long> Handle(DeleteOrderCommand command, CancellationToken cancellationToken)
+        public async Task<ApiResult<bool>> Handle(DeleteOrderByDocumentNoCommand command, CancellationToken cancellationToken)
         {
             try
             {
-                var orderOld = await _orderRepository.GetByIdAsync(command.Id);
+                var orderOld = await _orderRepository.GetOrderByDocumentNo(command.DocumentNo);
 
                 if (orderOld == null)
-                    throw new NotFoundException(nameof(Order), command.Id);
+                    throw new NotFoundException(nameof(Order), command.DocumentNo);
 
                  _orderRepository.Delete(orderOld);
                 orderOld.DeletedOrder();
@@ -38,12 +39,12 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Delete
 
                 _logger.LogInformation($"Order {orderOld.Id} is successfully deleted.");
 
-                return orderOld.Id;
+                return new ApiResult<bool>(true);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return 0;
+                return new ApiResult<bool>(false); 
             }
         }
     }

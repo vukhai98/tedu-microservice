@@ -9,26 +9,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ordering.Application.Features.V1.Orders.Queries.GetOrders
+namespace Ordering.Application.Features.V1.Orders.Queries.GetOrderById
 {
-    public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, ApiResult<List<OrderDto>>>
+    public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, ApiResult<OrderDto>>
     {
         private readonly IMapper _mapper;
         private readonly IOrderRepository _orderRepository;
 
-        public GetOrdersQueryHandler(IMapper mapper, IOrderRepository orderRepository)
+        public GetOrderByIdQueryHandler(IMapper mapper, IOrderRepository orderRepository)
         {
             _mapper = mapper ?? throw new ArgumentException(nameof(mapper));
             _orderRepository = orderRepository ?? throw new ArgumentException(nameof(orderRepository));
         }
 
-        public async Task<ApiResult<List<OrderDto>>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResult<OrderDto>> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
         {
-            var orderEntities = await _orderRepository.GetOrderByUserName(request.UserName);
+            var orderEntities = await _orderRepository.GetByIdAsync(request.Id);
 
-            var ordersList = _mapper.Map<List<OrderDto>>(orderEntities);
+            var orders = _mapper.Map<OrderDto>(orderEntities);
 
-            var result = new ApiSuccessedResult<List<OrderDto>>(ordersList);
+            var result = new ApiSuccessedResult<OrderDto>(orders);
 
             return result;
         }
