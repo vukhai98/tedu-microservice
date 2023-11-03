@@ -1,5 +1,8 @@
-﻿using Saga.Orchestrator.HttpRepository;
+﻿using Basket.API.Entities;
+using Contracts.Sages.SagaOrderManager;
+using Saga.Orchestrator.HttpRepository;
 using Saga.Orchestrator.HttpRepository.Interfaces;
+using Saga.Orchestrator.OrderManager;
 using Saga.Orchestrator.Services;
 using Saga.Orchestrator.Services.Interfaces;
 
@@ -12,7 +15,8 @@ namespace Saga.Orchestrator.Extensions
             services.AddTransient<IBasketHttpRepository, BasketHttpRepository>()
                     .AddTransient<IOrderHttpRepository, OrderHttpRepository>()
                     .AddTransient<IInventoryHttpRepository, InventoryHttpRepository>()
-                    .AddScoped<ICheckoutService, CheckoutService>();
+                    .AddScoped<ICheckoutService, CheckoutService>()
+                    .AddTransient<ISagaOrderManager<BasketCheckoutDto,OrderRespone>, SagaOrderManager>();
 
             return services;
         }

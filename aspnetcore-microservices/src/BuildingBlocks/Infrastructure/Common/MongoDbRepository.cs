@@ -19,6 +19,11 @@ namespace Contracts.Domains
             return Collection.InsertOneAsync(entity);
         }
 
+        public Task AddRangeAsync(List<T> entities)
+        {
+            return Collection.InsertManyAsync(entities);
+        }
+
         public Task DeleteAsync(string id)
         {
             return Collection.DeleteOneAsync(x => x.Id.Equals(id));

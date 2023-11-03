@@ -81,7 +81,7 @@ namespace Ordering.API.Controllers
         }
 
 
-        [HttpDelete("{id}", Name = RouteNames.DeleteOrders)]
+        [HttpDelete("{id}")]
         [ProducesResponseType(typeof(long), (int)HttpStatusCode.OK)]
         public async Task<long> DeleteOrder([Required] long id)
         {
@@ -95,7 +95,7 @@ namespace Ordering.API.Controllers
             return result;
         }
 
-        [HttpDelete("{documentNo}",Name = RouteNames.DeleteOrderByDocumentNo)]
+        [HttpDelete("documentno/{documentNo}")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         public async Task<ApiResult<bool>> DeleteOrderByDocumentNO([Required] string documentNo)
         {

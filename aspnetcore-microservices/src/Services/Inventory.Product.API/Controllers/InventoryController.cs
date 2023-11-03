@@ -101,21 +101,49 @@ namespace Inventory.Product.API.Controllers
         //[ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<InventoryEntryDto>> PurchaseOrder([Required] string itemNo, [FromBody] PurchaseProductDto dto)
         {
-            dto.ItemNo = itemNo;    
+            dto.ItemNo = itemNo;
             var result = await _inventoryService.PurchaseItemAsync(itemNo, dto);
 
             return Ok(result);
         }
 
-       
+
         [HttpPost("sale_item/{itemNo}")]
         //[ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<InventoryEntryDto>> SalesOrder([Required] string itemNo, [FromBody] SalesProductDto dto)
+        public async Task<ActionResult<InventoryEntryDto>> SalesItem([Required] string itemNo, [FromBody] SalesProductDto dto)
         {
             dto.ItemNo = itemNo;
             var result = await _inventoryService.SalesItemAsync(itemNo, dto);
 
             return Ok(result);
+        }
+
+        [HttpPost("sale_order/{orderDocumentNo}")]
+        //[ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CreatedSaleOrderSuccesDTO>> SalesOrder([Required] string orderDocumentNo, [FromBody] SalesOrderDto dto)
+        {
+            dto.OrderDocumentNo = orderDocumentNo;
+
+            var documentNo = await _inventoryService.SalesIOrderAsync(dto);
+
+            var result = new CreatedSaleOrderSuccesDTO(documentNo);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("document-no/{documentNo}")]
+        //[ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<bool>> DeleteByDocumentNo(string documentNo)
+        {
+            var result =  _inventoryService.DeleteByDocumentNoAsync(documentNo);
+
+            if (result.Id > 0)
+            {
+                return Ok(true);
+            }
+
+            return Ok(false);
+            
         }
 
 

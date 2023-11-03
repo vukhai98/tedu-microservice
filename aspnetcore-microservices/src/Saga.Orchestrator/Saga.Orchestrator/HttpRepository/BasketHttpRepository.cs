@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Infrastructure.Extensions;
+using Newtonsoft.Json;
 using Saga.Orchestrator.HttpRepository.Interfaces;
 using Shared.DTOs.Baskets;
 using System.Net;
@@ -14,9 +15,13 @@ namespace Saga.Orchestrator.HttpRepository
             _httpClient = httpClient;
         }
 
-        public Task<bool> DeleteBasket(string userName)
+        public async Task<bool> DeleteBasket(string userName)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.DeleteAsync($"baskets/{userName}");
+
+            var result = await response.ReadContentAs<bool>();
+
+            return result;
         }
 
         public async Task<CartDTO> GetBasket(string userName)
@@ -25,20 +30,25 @@ namespace Saga.Orchestrator.HttpRepository
 
             try
             {
-                if (response.StatusCode == HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    // Kiểm tra xem response có thành công và status code là OK không
+
+                    // Đọc dữ liệu từ response
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    if (string.IsNullOrEmpty(content))
+                        return null;
+
+                    // Chuyển đổi dữ liệu thành CartDTO
+                    var cart = JsonConvert.DeserializeObject<CartDTO>(content);
+
+                    return cart;
+                }
+                else
+                {
                     return null;
-                // Kiểm tra xem response có thành công và status code là OK không
-
-                // Đọc dữ liệu từ response
-                var content = await response.Content.ReadAsStringAsync();
-
-                if (string.IsNullOrEmpty(content))
-                    return null;
-
-                // Chuyển đổi dữ liệu thành CartDTO
-                var cart = JsonConvert.DeserializeObject<CartDTO>(content);
-                return cart;
-
+                }
             }
             catch (Exception ex)
             {
