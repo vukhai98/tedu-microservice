@@ -15,10 +15,10 @@ namespace Basket.API.Repositories
         private readonly ISerializeService _serializeService;
 
         private readonly IDistributedCache _redisCacheService;
-        private readonly ILogger<BasketRepository> _logger;
+        private readonly ILogger _logger;
         private readonly IEmailTemplateService _emailTemplateService;
         private readonly BackgroundJobHttpService _backgroundJobHttpService;
-        public BasketRepository(ISerializeService serializeService, IDistributedCache redisCacheService, ILogger<BasketRepository> logger, IEmailTemplateService emailTemplateService, BackgroundJobHttpService backgroundJobHttpService)
+        public BasketRepository(ISerializeService serializeService, IDistributedCache redisCacheService, ILogger logger, IEmailTemplateService emailTemplateService, BackgroundJobHttpService backgroundJobHttpService)
         {
             _serializeService = serializeService;
             _redisCacheService = redisCacheService;
@@ -33,10 +33,10 @@ namespace Basket.API.Repositories
 
             try
             {
-                _logger.LogInformation($"BEGIN: GetBasketByUserName {userName}");
+                _logger.Information($"BEGIN: GetBasketByUserName {userName}");
 
                 await _redisCacheService.RemoveAsync(userName);
-                _logger.LogInformation($"BEGIN: GetBasketByUserName {userName}");
+                _logger.Information($"BEGIN: GetBasketByUserName {userName}");
 
 
                 return true;
@@ -44,7 +44,7 @@ namespace Basket.API.Repositories
             catch (Exception ex)
             {
 
-                _logger.LogError(ex.Message);
+                _logger.Error(ex.Message);
                 return false;
             }
 
@@ -52,11 +52,11 @@ namespace Basket.API.Repositories
 
         public async Task<Cart?> GetBasketByUserName(string userName)
         {
-            _logger.LogInformation($"BEGIN: GetBasketByUserName {userName}");
+            _logger.Information($"BEGIN: GetBasketByUserName {userName}");
 
             var basket = await _redisCacheService.GetStringAsync(userName);
 
-            _logger.LogInformation($"END: GetBasketByUserName {userName}");
+            _logger.Information($"END: GetBasketByUserName {userName}");
 
 
             return string.IsNullOrEmpty(basket) ? null : _serializeService.Deserialize<Cart>(basket);
@@ -66,7 +66,7 @@ namespace Basket.API.Repositories
         {
             DeleteReminderCheckoutOrder(cart.UserName);
 
-            _logger.LogInformation($"BEGIN: Update Basket for {cart.UserName}");
+            _logger.Information($"BEGIN: Update Basket for {cart.UserName}");
 
             var key = cart.UserName;
             var value = _serializeService.Serialize(cart);
@@ -80,7 +80,7 @@ namespace Basket.API.Repositories
                 await _redisCacheService.SetStringAsync(key, value);
             }
 
-            _logger.LogInformation($"END: Update Basket for {cart.UserName}");
+            _logger.Information($"END: Update Basket for {cart.UserName}");
 
             try
             {
@@ -89,7 +89,7 @@ namespace Basket.API.Repositories
             catch (Exception ex)
             {
 
-                _logger.LogError(ex.Message);
+                _logger.Error(ex.Message);
             }
 
             var result = await GetBasketByUserName(key);
@@ -137,7 +137,7 @@ namespace Basket.API.Repositories
 
             _backgroundJobHttpService.Client.DeleteAsync(uri);
 
-            _logger.LogInformation($"Delete ReminderCheckoutOrder: Deleted JobId: {cart.JobId}");
+            _logger.Information($"Delete ReminderCheckoutOrder: Deleted JobId: {cart.JobId}");
         }
     }
 }

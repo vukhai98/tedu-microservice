@@ -10,9 +10,6 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Host.UseSerilog(Serilogger.Configure);
-
 Log.Information(messageTemplate: "Start Ordering API up");
 try
 {

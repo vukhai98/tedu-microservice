@@ -6,7 +6,6 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
-builder.Host.UseSerilog(Serilogger.Configure);
 Log.Information(messageTemplate: "Start Saga.Orchestrator  up");
 
 try

@@ -7,6 +7,8 @@ using Saga.Orchestrator.Services;
 using Shared.DTOs.Baskets;
 using Shared.DTOs.Inventory;
 using Shared.DTOs.Orders;
+using ILogger = Serilog.ILogger;
+
 
 namespace Saga.Orchestrator.OrderManager
 {
@@ -16,14 +18,14 @@ namespace Saga.Orchestrator.OrderManager
         private readonly IInventoryHttpRepository _inventoryHttpRepository;
         private readonly IOrderHttpRepository _orderHttpRepository;
         private readonly IMapper _mapper;
-        private readonly ILogger<SagaOrderManager> _logger;
+        private readonly ILogger _logger;
 
         public SagaOrderManager(
             IBasketHttpRepository basketHttpRepository,
             IInventoryHttpRepository inventoryHttpRepository,
             IOrderHttpRepository orderHttpRepository,
             IMapper mapper,
-            ILogger<SagaOrderManager> logger)
+            ILogger logger)
         {
             _basketHttpRepository = basketHttpRepository;
             _inventoryHttpRepository = inventoryHttpRepository;

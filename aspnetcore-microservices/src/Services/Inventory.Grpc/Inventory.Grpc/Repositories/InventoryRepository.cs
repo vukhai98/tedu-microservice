@@ -5,14 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using MongoDB.Driver;
 using Shared.Configurations;
+using ILogger = Serilog.ILogger;
 
 namespace Inventory.Grpc.Repositories
 {
     public class InventoryRepository : MongoDbRepository<InventoryEntry>, IInventoryRepository
     {
-        private readonly ILogger<InventoryRepository> _logger;
+        private readonly ILogger _logger;
 
-        public InventoryRepository(IMongoClient client, MongoDBSettings settings, ILogger<InventoryRepository> logger) : base(client, settings)
+        public InventoryRepository(IMongoClient client, MongoDBSettings settings, ILogger logger) : base(client, settings)
         {
             _logger = logger;
         }
@@ -21,15 +22,15 @@ namespace Inventory.Grpc.Repositories
         {
             try
             {
-                _logger.LogInformation($"BEGIN GetStockQuantity: {itemNo}");
+                _logger.Information($"BEGIN GetStockQuantity: {itemNo}");
                 var result = Collection.AsQueryable().Where(x => x.ItemNo.Equals(itemNo)).Sum(x => x.Quantity);
-                _logger.LogInformation($"END GetStockQuantity: {itemNo} - value:{result}");
+                _logger.Information($"END GetStockQuantity: {itemNo} - value:{result}");
 
                 return result;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.Error(ex.Message);
                 return 0;
             }
 

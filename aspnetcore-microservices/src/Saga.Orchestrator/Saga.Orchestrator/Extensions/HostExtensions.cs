@@ -1,17 +1,20 @@
-﻿namespace Saga.Orchestrator.Extensions
+﻿using Common.Logging;
+using Serilog;
+
+namespace Saga.Orchestrator.Extensions
 {
-        public static class HostExtensions
+    public static class HostExtensions
+    {
+        public static void AddAppConfigurations(this ConfigureHostBuilder host)
         {
-            public static void AddAppConfigurations(this ConfigureHostBuilder host)
+            host.ConfigureAppConfiguration((context, config) =>
             {
-                host.ConfigureAppConfiguration((context, config) =>
-                {
-                    var env = context.HostingEnvironment;
-                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                            .AddEnvironmentVariables();
-                });
-            }
+                var env = context.HostingEnvironment;
+                config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                        .AddEnvironmentVariables();
+            }).UseSerilog(Serilogger.Configure);
         }
-    
+    }
+
 }

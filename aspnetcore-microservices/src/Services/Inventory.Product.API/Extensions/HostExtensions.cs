@@ -1,5 +1,7 @@
-﻿using Inventory.Product.API.Persistence;
+﻿using Common.Logging;
+using Inventory.Product.API.Persistence;
 using MongoDB.Driver;
+using Serilog;
 using Shared.Configurations;
 
 namespace Inventory.Product.API.Extensions
@@ -30,7 +32,7 @@ namespace Inventory.Product.API.Extensions
                 config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                         .AddEnvironmentVariables();
-            });
+            }).UseSerilog(Serilogger.Configure);
         }
     }
 }

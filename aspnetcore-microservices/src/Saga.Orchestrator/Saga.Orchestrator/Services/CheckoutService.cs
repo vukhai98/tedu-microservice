@@ -4,6 +4,8 @@ using Saga.Orchestrator.HttpRepository.Interfaces;
 using Saga.Orchestrator.Services.Interfaces;
 using Shared.DTOs.Inventory;
 using Shared.DTOs.Orders;
+using ILogger = Serilog.ILogger;
+
 
 namespace Saga.Orchestrator.Services
 {
@@ -13,14 +15,14 @@ namespace Saga.Orchestrator.Services
         private readonly IInventoryHttpRepository _inventoryHttpRepository;
         private readonly IOrderHttpRepository _orderHttpRepository;
         private readonly IMapper _mapper;
-        private readonly ILogger<CheckoutService> _logger;
+        private readonly ILogger _logger;
 
         public CheckoutService(
             IBasketHttpRepository basketHttpRepository,
             IInventoryHttpRepository inventoryHttpRepository,
             IOrderHttpRepository orderHttpRepository,
             IMapper mapper,
-            ILogger<CheckoutService> logger)
+            ILogger logger)
         {
             _basketHttpRepository = basketHttpRepository;
             _inventoryHttpRepository = inventoryHttpRepository;
@@ -32,20 +34,20 @@ namespace Saga.Orchestrator.Services
         {
             #region Get cart from IBasketHttpRepository
 
-            _logger.LogInformation($"Start : get cart {userName}");
+            _logger.Information($"Start : get cart {userName}");
 
              var cart = await _basketHttpRepository.GetBasket(userName);
 
             if (cart == null)
                 return false;
 
-            _logger.LogInformation($"End: get cart {userName} success");
+            _logger.Information($"End: get cart {userName} success");
 
             #endregion
 
             #region Create Order from IOrderHttpRepository
 
-            _logger.LogInformation($" Statrt creat order");
+            _logger.Information($" Statrt creat order");
 
             var order = _mapper.Map<CreateOrderDto>(basketCheckoutDto);
 
@@ -61,7 +63,7 @@ namespace Saga.Orchestrator.Services
 
             var addOrder = await _orderHttpRepository.GetOrder(orderId);
 
-            _logger.LogInformation($" End: creat order success, OrderId:{orderId}");
+            _logger.Information($" End: creat order success, OrderId:{orderId}");
 
             #endregion
 
@@ -77,7 +79,7 @@ namespace Saga.Orchestrator.Services
 
                 foreach (var item in cart.Items)
                 {
-                    _logger.LogInformation($"Start: Sale ItemNo {item.ItemNo} - Quantity:{item.Quantity}");
+                    _logger.Information($"Start: Sale ItemNo {item.ItemNo} - Quantity:{item.Quantity}");
 
                     var saleOrder = new SalesProductDto(addOrder.DocumentNo, item.Quantity);
 
@@ -86,7 +88,7 @@ namespace Saga.Orchestrator.Services
                     var documentNo = await _inventoryHttpRepository.CreateSalesOrder(saleOrder);
                     inventoryDocumentNoes.Add(documentNo);
 
-                    _logger.LogInformation($"End: Sale Item No:{item.ItemNo}" + $"Quantity: {item.Quantity} - Document No: {documentNo}");
+                    _logger.Information($"End: Sale Item No:{item.ItemNo}" + $"Quantity: {item.Quantity} - Document No: {documentNo}");
 
                 }
 
@@ -94,7 +96,7 @@ namespace Saga.Orchestrator.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.Error(ex.Message);
                 await RollbackCheckoutOrder(userName, orderId, inventoryDocumentNoes);
                 return false;
             }
@@ -105,7 +107,7 @@ namespace Saga.Orchestrator.Services
 
         private async Task RollbackCheckoutOrder(string userName, long orderId, List<string> inventoryDocumentNos)
         {
-            _logger.LogInformation($"Start: Rollback checkoutOrder for userName: {userName} - orderId:{orderId} - inventory documentNos: {String.Join(",", inventoryDocumentNos)} ");
+            _logger.Information($"Start: Rollback checkoutOrder for userName: {userName} - orderId:{orderId} - inventory documentNos: {String.Join(",", inventoryDocumentNos)} ");
 
             var deletedDocumentNos = new List<string>();
             // delete order by order's id , order's documentno
@@ -116,7 +118,7 @@ namespace Saga.Orchestrator.Services
                 deletedDocumentNos.Add(documentNo);
             }
 
-            _logger.LogInformation($"End: Deleted documentNos : {string.Join(",", deletedDocumentNos)}");
+            _logger.Information($"End: Deleted documentNos : {string.Join(",", deletedDocumentNos)}");
         }
     }
 }

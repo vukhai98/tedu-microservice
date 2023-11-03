@@ -6,17 +6,19 @@ using Ordering.Application.Common.Exceptions;
 using Ordering.Application.Common.Intrerfaces;
 using Ordering.Domain.Entities;
 using Shared.SeedWork;
+using ILogger = Serilog.ILogger;
+
 
 namespace Ordering.Application.Features.V1.Orders.Commands.Delete
 {
     public class DeleteOrderByDocumentNoHandler : IRequestHandler<DeleteOrderByDocumentNoCommand, ApiResult<bool>>
     {
         private readonly IMapper _mapper;
-        private readonly ILogger<DeleteOrderHandler> _logger;
+        private readonly ILogger _logger;
         private readonly IOrderRepository _orderRepository;
         private readonly ISmtpEmailService _emailService;
         private const string MethodName = "UpdateOrderCommandHandler";
-        public DeleteOrderByDocumentNoHandler(IMapper mapper, IOrderRepository orderRepository, ILogger<DeleteOrderHandler> logger, ISmtpEmailService emailService)
+        public DeleteOrderByDocumentNoHandler(IMapper mapper, IOrderRepository orderRepository, ILogger logger, ISmtpEmailService emailService)
         {
             _mapper = mapper ?? throw new ArgumentException(nameof(mapper));
             _orderRepository = orderRepository ?? throw new ArgumentException(nameof(orderRepository));
@@ -37,13 +39,13 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Delete
                 orderOld.DeletedOrder();
                 await _orderRepository.SaveChangesAsync();
 
-                _logger.LogInformation($"Order {orderOld.Id} is successfully deleted.");
+                _logger.Information($"Order {orderOld.Id} is successfully deleted.");
 
                 return new ApiResult<bool>(true);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.Error(ex.Message, ex);
                 return new ApiResult<bool>(false); 
             }
         }

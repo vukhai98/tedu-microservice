@@ -3,7 +3,6 @@ using Inventory.Product.API.Extensions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseSerilog(Serilogger.Configure);
 
 Log.Information(messageTemplate: "Start Inventory API up");
 

@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Common.Logging;
+using Serilog;
 using Shared.Configurations;
 
 namespace Hangfire.API.Extensions
@@ -13,7 +14,7 @@ namespace Hangfire.API.Extensions
                 config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                         .AddEnvironmentVariables();
-            }).UseSerilog();
+            }).UseSerilog(Serilogger.Configure);
         }
 
         internal static IApplicationBuilder UseHangfireDashboard(this IApplicationBuilder app, IConfiguration configuration)

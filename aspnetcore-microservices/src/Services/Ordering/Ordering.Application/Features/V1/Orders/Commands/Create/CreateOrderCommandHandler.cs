@@ -7,17 +7,19 @@ using Ordering.Application.Features.V1.Orders.Commands.Create;
 using Ordering.Domain.Entities;
 using Shared.SeedWork;
 using Shared.Services.Email;
+using ILogger = Serilog.ILogger;
+
 
 namespace Ordering.Application.Features.V1.Orders.Commands.Create
 {
     public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, ApiResult<long>>
     {
         private readonly IMapper _mapper;
-        private readonly ILogger<CreateOrderHandler> _logger;
+        private readonly ILogger _logger;
         private readonly IOrderRepository _orderRepository;
         private readonly ISmtpEmailService _emailService;
         private const string MethodName = "CreateOrderCommandHandler";
-        public CreateOrderHandler(IMapper mapper, IOrderRepository orderRepository, ILogger<CreateOrderHandler> logger, ISmtpEmailService emailService)
+        public CreateOrderHandler(IMapper mapper, IOrderRepository orderRepository, ILogger logger, ISmtpEmailService emailService)
         {
             _mapper = mapper ?? throw new ArgumentException(nameof(mapper));
             _orderRepository = orderRepository ?? throw new ArgumentException(nameof(orderRepository));
@@ -29,7 +31,7 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Create
         {
             try
             {
-                _logger.LogInformation($"BEGIN: {MethodName} - UserName: {command.UserName}");
+                _logger.Information($"BEGIN: {MethodName} - UserName: {command.UserName}");
 
                 var orderEntity = _mapper.Map<Order>(command);
 
@@ -40,7 +42,7 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Create
 
                 await _orderRepository.SaveChangesAsync();
 
-                _logger.LogInformation($"Order {orderEntity.Id} is successfully created.");
+                _logger.Information($"Order {orderEntity.Id} is successfully created.");
 
                 // send mail for user 
                 //SendMailAsync(addedOrder, cancellationToken);
@@ -49,7 +51,7 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Create
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.Error(ex.Message, ex);
                 return new ApiResult<long>(false, 0);
             }
         }
@@ -66,11 +68,11 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Create
             try
             {
                 await _emailService.SendEmailAsync(emailRequest, cancellationToken);
-                _logger.LogInformation($"Sent create Orders to mail {order.EmailAddress}");
+                _logger.Information($"Sent create Orders to mail {order.EmailAddress}");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Orders {order.Id} failed due to an erroe with the mail service: {ex.Message}");
+                _logger.Information($"Orders {order.Id} failed due to an erroe with the mail service: {ex.Message}");
             }
         }
     }
