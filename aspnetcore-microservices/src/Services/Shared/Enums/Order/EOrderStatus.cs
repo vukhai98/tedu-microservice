@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ordering.Domain.Enums
+namespace Shared.Enums.Order
 {
     public enum EOrderStatus
     {

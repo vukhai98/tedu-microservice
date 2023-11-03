@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Ordering.Application.Common.Intrerfaces;
-using Ordering.Application.Common.Models;
+using Shared.DTOs.Orders;
 using Shared.SeedWork;
 using System;
 using System.Collections.Generic;

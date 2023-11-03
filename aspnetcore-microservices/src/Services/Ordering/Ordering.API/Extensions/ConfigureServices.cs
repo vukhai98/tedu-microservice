@@ -7,12 +7,13 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Ordering.Application.Common.Behaviours;
 using Ordering.Application.Common.Intrerfaces;
-using Ordering.Application.Common.Models;
 using Ordering.Application.Features.V1.Orders.Commands.Create;
 using Ordering.Application.Features.V1.Orders.Commands.Delete;
 using Ordering.Application.Features.V1.Orders.Commands.Update;
+using Ordering.Application.Features.V1.Orders.Queries.GetOrderById;
 using Ordering.Application.Features.V1.Orders.Queries.GetOrders;
 using Ordering.Infrastructure.Repositories;
+using Shared.DTOs.Orders;
 using Shared.SeedWork;
 using System;
 using System.Collections.Generic;
@@ -41,10 +42,12 @@ namespace Ordering.API.Extensions
             services.AddScoped(typeof(ISmtpEmailService), typeof(SMTPEmailServices));
 
             // Đăng ký xử lý yêu cầu GetOrdersQuery
+            services.AddTransient<IRequestHandler<GetOrderByIdQuery, ApiResult<OrderDto>>, GetOrderByIdQueryHandler>();
             services.AddTransient<IRequestHandler<GetOrdersQuery, ApiResult<List<OrderDto>>>, GetOrdersQueryHandler>();
             services.AddTransient<IRequestHandler<CreateOrderCommand, ApiResult<long>>, CreateOrderHandler>();
             services.AddTransient<IRequestHandler<UpdateOrderCommand, ApiResult<OrderDto>>, UpdateOrderHandler>();
             services.AddTransient<IRequestHandler<DeleteOrderCommand, long>, DeleteOrderHandler>();
+            services.AddTransient<IRequestHandler<DeleteOrderByDocumentNoCommand, ApiResult<bool>>, DeleteOrderByDocumentNoHandler>();
 
             return services;
         }

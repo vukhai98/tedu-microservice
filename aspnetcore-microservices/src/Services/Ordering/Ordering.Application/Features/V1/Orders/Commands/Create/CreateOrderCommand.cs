@@ -2,7 +2,6 @@
 using EventBus.Messages.IntegrationEvents.Events;
 using MediatR;
 using Ordering.Application.Common.Mappings;
-using Ordering.Application.Common.Models;
 using Ordering.Application.Features.V1.Orders.Common;
 using Ordering.Domain.Entities;
 using Shared.SeedWork;

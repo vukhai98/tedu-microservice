@@ -25,7 +25,7 @@ namespace Inventory.Product.API.Controllers
         /// <param name="itemNo"></param>
         /// <returns></returns>
         [HttpGet("items/{itemNo}")]
-        [ProducesResponseType(typeof(IEnumerable<InventoryEntryDto>), (int)HttpStatusCode.OK)]
+        //[ProducesResponseType(typeof(IEnumerable<InventoryEntryDto>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<InventoryEntryDto>>> GetAllByItemNo([Required] string itemNo)
         {
             var result = await _inventoryService.GetAllByItemNoAsync(itemNo);
@@ -43,7 +43,7 @@ namespace Inventory.Product.API.Controllers
         /// <param name="query"></param>
         /// <returns></returns>
         [HttpGet("items/{itemNo}/paging")]
-        [ProducesResponseType(typeof(PageList<InventoryEntryDto>), (int)HttpStatusCode.OK)]
+        //[ProducesResponseType(typeof(PageList<InventoryEntryDto>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<PageList<InventoryEntryDto>>> GetAllByItemNoPaging([Required] string itemNo, [FromQuery] GetInventoryPagingQuery query)
         {
             query.SetItemNo(itemNo);
@@ -62,7 +62,7 @@ namespace Inventory.Product.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("item/{id}")]
-        [ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
+        //[ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<InventoryEntryDto>> GetById([Required] string id)
         {
 
@@ -80,7 +80,7 @@ namespace Inventory.Product.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("item/{id}")]
-        [ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
+        //[ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<InventoryEntryDto>> DeleteById([Required] string id)
         {
             var inventoryEntry = await _inventoryService.GetById(id);
@@ -98,13 +98,52 @@ namespace Inventory.Product.API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost("item/{itemNo}")]
-        [ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
+        //[ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<InventoryEntryDto>> PurchaseOrder([Required] string itemNo, [FromBody] PurchaseProductDto dto)
         {
-            dto.ItemNo = itemNo;    
+            dto.ItemNo = itemNo;
             var result = await _inventoryService.PurchaseItemAsync(itemNo, dto);
 
             return Ok(result);
+        }
+
+
+        [HttpPost("sale_item/{itemNo}")]
+        //[ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<InventoryEntryDto>> SalesItem([Required] string itemNo, [FromBody] SalesProductDto dto)
+        {
+            dto.ItemNo = itemNo;
+            var result = await _inventoryService.SalesItemAsync(itemNo, dto);
+
+            return Ok(result);
+        }
+
+        [HttpPost("sale_order/{orderDocumentNo}")]
+        //[ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CreatedSaleOrderSuccesDTO>> SalesOrder([Required] string orderDocumentNo, [FromBody] SalesOrderDto dto)
+        {
+            dto.OrderDocumentNo = orderDocumentNo;
+
+            var documentNo = await _inventoryService.SalesIOrderAsync(dto);
+
+            var result = new CreatedSaleOrderSuccesDTO(documentNo);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("document-no/{documentNo}")]
+        //[ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<bool>> DeleteByDocumentNo(string documentNo)
+        {
+            var result =  _inventoryService.DeleteByDocumentNoAsync(documentNo);
+
+            if (result.Id > 0)
+            {
+                return Ok(true);
+            }
+
+            return Ok(false);
+            
         }
 
 

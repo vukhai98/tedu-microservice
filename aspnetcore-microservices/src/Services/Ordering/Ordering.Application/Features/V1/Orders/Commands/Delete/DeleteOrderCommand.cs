@@ -9,11 +9,7 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Delete
 {
     public class DeleteOrderCommand : IRequest<long>
     {
-        public long Id { get; private set; }
+        public long Id { get;  set; }
 
-        public DeleteOrderCommand(long id)
-        {
-            Id = id;
-        }
     }
 }

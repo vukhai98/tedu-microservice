@@ -2,18 +2,9 @@
 using Contracts.Services;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using NETCore.MailKit.Core;
 using Ordering.Application.Common.Exceptions;
 using Ordering.Application.Common.Intrerfaces;
-using Ordering.Application.Common.Models;
-using Ordering.Application.Features.V1.Orders.Commands.Create;
 using Ordering.Domain.Entities;
-using Shared.SeedWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ordering.Application.Features.V1.Orders.Commands.Delete
 {
