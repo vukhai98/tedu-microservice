@@ -33,7 +33,7 @@ namespace Ordering.Application.Features.V1.Orders.Commands.Create
 
                 var orderEntity = _mapper.Map<Order>(command);
 
-                 _orderRepository.CreateAsync(orderEntity);
+                 _orderRepository.Create(orderEntity);
 
                 // Trigger event create entity order
                 orderEntity.AddedOrder();

@@ -34,7 +34,7 @@ namespace Saga.Orchestrator.Services
 
             _logger.LogInformation($"Start : get cart {userName}");
 
-            var cart = await _basketHttpRepository.GetBasket(userName);
+             var cart = await _basketHttpRepository.GetBasket(userName);
 
             if (cart == null)
                 return false;

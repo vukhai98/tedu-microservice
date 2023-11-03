@@ -14,7 +14,7 @@ namespace Customer.API.Repositories
         public async Task<Entities.Customer> GetCustomerByUserName(string userName)
         {
             var customer = await FindByCondition(x => x.UserName.ToLower().Contains(userName.ToLower())).FirstOrDefaultAsync();
-
+            
             return customer != null ? customer : null;
         }
     }

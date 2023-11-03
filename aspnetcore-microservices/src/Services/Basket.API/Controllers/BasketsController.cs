@@ -56,7 +56,7 @@ namespace Basket.API.Controllers
             }
             var options = new DistributedCacheEntryOptions()
                                         .SetAbsoluteExpiration(DateTime.UtcNow.AddHours(1)) // Hạn của basket tồn tại trong bao lâu
-                                        .SetSlidingExpiration(TimeSpan.FromMinutes(5)); // Kiểm tra  xem bao nhiêu lâu chưa gọi đến key đấy
+                                        .SetSlidingExpiration(TimeSpan.FromHours(1)); // Kiểm tra  xem bao nhiêu lâu chưa gọi đến key đấy
 
             var cart = _mapper.Map<Cart>(request);
             var updateCart = await _repository.UpdateBasket(cart, options);

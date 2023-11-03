@@ -28,7 +28,7 @@ namespace Saga.Orchestrator.Extensions
         {
             services.AddHttpClient<IOrderHttpRepository, OrderHttpRepository>("OrderAPI", (_serviceProvider, httpClient) =>
             {
-                httpClient.BaseAddress = new Uri("http://localhost:5005/api");
+                httpClient.BaseAddress = new Uri("http://localhost:5005/api/v1/");
             });
 
             services.AddScoped(iServiceProvider => iServiceProvider.GetService<IHttpClientFactory>().CreateClient("OrderAPI"));
@@ -38,7 +38,7 @@ namespace Saga.Orchestrator.Extensions
         {
             services.AddHttpClient<IInventoryHttpRepository, InventoryHttpRepository>("InventoryAPI", (_serviceProvider, httpClient) =>
             {
-                httpClient.BaseAddress = new Uri("http://localhost:5006/api");
+                httpClient.BaseAddress = new Uri("http://localhost:5006/api/");
             });
 
             services.AddScoped(iServiceProvider => iServiceProvider.GetService<IHttpClientFactory>().CreateClient("InventoryAPI"));
@@ -48,7 +48,7 @@ namespace Saga.Orchestrator.Extensions
         {
             services.AddHttpClient<IBasketHttpRepository, BasketHttpRepository>("BasketAPI", (_serviceProvider, httpClient) =>
             {
-                httpClient.BaseAddress = new Uri("http://localhost:5004/api");
+                httpClient.BaseAddress = new Uri("http://localhost:5004/api/");
             });
 
             services.AddScoped(iServiceProvider => iServiceProvider.GetService<IHttpClientFactory>().CreateClient("BasketAPI"));
